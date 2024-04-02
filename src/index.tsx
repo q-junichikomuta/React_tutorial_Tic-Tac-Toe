@@ -10,5 +10,6 @@ const root = ReactDOM.createRoot(rootElement);
 root.render(
   <StrictMode>
     <App />
+    追加したよ
   </StrictMode>
 );
