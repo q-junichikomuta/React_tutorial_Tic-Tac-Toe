@@ -62,15 +62,12 @@ export function useCalc() {
 
             lineAll.push(lines[i])
 
-            console.log("line", line);
-
             // squaresからValueを取り出す
             const square: Value[] = []
             for (let i = 0; i < line.length; i++) {
                 square.push(squares[line[i]])
             }
             squareAll.push(square)
-            console.log(square);
 
             // 一列のうちにnullが含まれておらず、全て同じ文字列であればtrueを返す
             const checkWin = square.includes(null) ? false : square.every((val) => val === square[0])
@@ -81,9 +78,6 @@ export function useCalc() {
         }
 
         // 引き分けを求めるために、全ての列に◯と☓の両方が含まれていないか確認する
-        console.log("lineAll", lineAll);
-        console.log("squareAll", squareAll);
-
         for (let i = 0; i < lineAll.length; i++) {
             const allCheckDraw: boolean[] = []
             for (let i = 0; i < lineAll.length; i++) {

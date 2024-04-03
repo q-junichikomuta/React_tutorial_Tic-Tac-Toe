@@ -45,8 +45,6 @@ export function Board({ xIsNext, squares, onPlay, squaresNum }: PropBoard) {
     const squaresRow = [];
     for (let col = 0; col < squaresNum; col++) {
       const squaresIndex = row * squaresNum + col;
-      console.log("squares", squares);
-
       squaresRow.push(
         <Square
           key={`Square-${col + 1}`}
