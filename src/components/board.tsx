@@ -1,31 +1,31 @@
-import { useCalc } from "@/hooks/calc";
-import Square from "./square";
-import styled from '@emotion/styled'
+import { useCalc } from '@/hooks/calc';
+import Square from './square';
+import styled from '@emotion/styled';
 
 export function Board({ xIsNext, squares, onPlay, squaresNum }: PropBoard) {
   const calculateWinner = useCalc();
 
   const Wrapper = styled.div`
-    position:flex;
-    display:inline-block;
-  `
+    position: flex;
+    display: inline-block;
+  `;
 
   const BoardRow = styled.div`
-    display:flex;
-    width:300px;
-    height:50px;
-    margin:2px;
-  `
+    display: flex;
+    width: 300px;
+    height: 50px;
+    margin: 2px;
+  `;
 
   const winner = calculateWinner(squares, squaresNum);
-  const winPlayer = winner?.winplayer
-  const winLines = winner ? winner?.winLine : null
+  const winPlayer = winner?.winplayer;
+  const winLines = winner ? winner?.winLine : null;
 
   let status;
   if (winner) {
-    status = "Winner: " + winPlayer;
+    status = 'Winner: ' + winPlayer;
   } else {
-    status = "Next player: " + (xIsNext ? "X" : "O");
+    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
 
   function handleClick(i: number) {
@@ -36,11 +36,11 @@ export function Board({ xIsNext, squares, onPlay, squaresNum }: PropBoard) {
       return;
     }
     const nextSquares = squares.slice();
-    nextSquares[i] = xIsNext ? "X" : "O";
+    nextSquares[i] = xIsNext ? 'X' : 'O';
     onPlay(nextSquares, { row, col });
   }
 
-  const boardRow = []
+  const boardRow = [];
   for (let row = 0; row < squaresNum; row++) {
     const squaresRow = [];
     for (let col = 0; col < squaresNum; col++) {
@@ -52,9 +52,9 @@ export function Board({ xIsNext, squares, onPlay, squaresNum }: PropBoard) {
           onClick={() => handleClick(squaresIndex)}
           winLine={winLines?.includes(squaresIndex) ? winLines : null}
         />
-      )
+      );
     }
-    boardRow.push(<BoardRow key={`BoardRow-${row + 1}`}>{squaresRow}</BoardRow>)
+    boardRow.push(<BoardRow key={`BoardRow-${row + 1}`}>{squaresRow}</BoardRow>);
   }
 
   return (
