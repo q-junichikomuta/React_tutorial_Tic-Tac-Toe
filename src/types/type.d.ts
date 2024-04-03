@@ -1,15 +1,10 @@
 // マス目に入るValueの定義
 type Value = "X" | "O" | null;
 
-type Positon = {
+type Position = {
   row: number | null;
   col: number | null;
 }
-
-type History = {
-  value: Value[];
-  potision: Positon;
-};
 
 type ArrayValue = Array<Value>;
 
@@ -22,6 +17,6 @@ type PropSquare = {
 type PropBoard = {
   xIsNext: boolean;
   squares: Value[];
-  onPlay: (nextSquares: Value[]) => void;
+  onPlay: (nextSquares: Value[], position: Position) => void;
   squaresNum: number;
 };

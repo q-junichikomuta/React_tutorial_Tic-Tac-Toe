@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 
 export default function Square({ value, onClick, winLine }: PropSquare) {
   const bgColor = winLine ? "white" : "#525F78"
+  const valueColor = value ? "" : "bisque"
 
   const Button = styled.button`
   background-color: ${bgColor};
@@ -15,7 +16,7 @@ export default function Square({ value, onClick, winLine }: PropSquare) {
   width:50px;
   height:50px;
   &:hover {
-    background-color: bisque;
+    background-color: ${valueColor};
   }
 `
 
