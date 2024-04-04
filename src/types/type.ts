@@ -20,7 +20,7 @@ type PropSquare = {
 };
 
 type PropBoard = {
-  xIsNext: boolean;
+  nextPlayer: boolean;
   squares: Value[];
   onPlay: (nextSquares: Value[], position: Position) => void;
   squaresNum: number;
