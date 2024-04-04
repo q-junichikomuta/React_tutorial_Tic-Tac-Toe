@@ -1,10 +1,15 @@
 // マス目に入るValueの定義
-type Value = "X" | "O" | null;
+type Value = 'X' | 'O' | null;
 
 type Position = {
   row: number | null;
   col: number | null;
-}
+};
+
+type HistoryType = {
+  value: Value[];
+  position: Position;
+};
 
 type ArrayValue = Array<Value>;
 

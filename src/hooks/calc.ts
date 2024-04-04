@@ -47,13 +47,16 @@ export function useCalc() {
     return winLine;
   }
 
-  // 勝者を判定する関数
+  // 勝者もしくは引き分けを判定する関数
   function calculateWinner(squares: Value[], num: number) {
     // 勝利列のインデックスの配列
     // ex:[0,1,2],[3,4,5],[6,7,8],[0,3,6]...
     const lines = calculateWinLine(num);
     const lineAll: number[][] = [];
     const squareAll: Value[][] = [];
+
+    console.log('lineAll', lineAll);
+    console.log('squareAll', squareAll);
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -71,21 +74,29 @@ export function useCalc() {
       const checkWin = square.includes(null) ? false : square.every((val) => val === square[0]);
 
       if (checkWin) {
-        return { winplayer: squares[0], winLine: lines[i] };
+        return { winplayer: square[0], winLine: lines[i] };
       }
     }
 
     // 引き分けを求めるために、全ての列に◯と☓の両方が含まれていないか確認する
+    const allCheckDraw: boolean[] = [];
     for (let i = 0; i < lineAll.length; i++) {
-      const allCheckDraw: boolean[] = [];
-      for (let i = 0; i < lineAll.length; i++) {
-        const checkDraw = squareAll[i].includes('X' && 'O');
-        allCheckDraw.push(checkDraw);
-      }
-      if (allCheckDraw.every((val) => val === true)) {
-        return { winplayer: 'Draw' };
-      }
+      // 後のincludesメソッドで識別できるように配列の中身をjoinメソッド文字列化する
+      const joined = squareAll[i].join('');
+      const checkText = ['X', 'O'];
+
+      // 複数の特定要素のうち全部当てはまったら true を返す
+      const isAllIncludes = (arr: string[], target: string) => arr.every((el) => target.includes(el));
+
+      const checkDraw = isAllIncludes(checkText, joined);
+      allCheckDraw.push(checkDraw);
     }
+    console.log('allCheckDraw', allCheckDraw);
+
+    if (allCheckDraw.every((val) => val === true)) {
+      return { winplayer: 'Draw' };
+    }
+
     return null;
   }
 
