@@ -1,10 +1,8 @@
-import { useCalc } from '@/utils/calc';
+import { calculateWinner } from '@/utils/calc';
 import { Square } from './square';
 import { BoardRow, Wrapper } from '@/utils/styleComponents';
 
 export const Board = ({ nextPlayer, squares, onPlay, squaresNum }: PropBoard) => {
-  const calculateWinner = useCalc();
-
   const winner = calculateWinner(squares, squaresNum);
   const winPlayer = winner?.winplayer;
   const winLines = winner ? winner?.winLine : null;
