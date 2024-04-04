@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Board } from "./board";
 import styled from '@emotion/styled'
 
+type History = {
+    value: Value[];
+    position: Position;
+};
 
 export default function Game({ squaresNum }: { squaresNum: number }) {
     const GameBoard = styled.div`
@@ -10,14 +14,20 @@ export default function Game({ squaresNum }: { squaresNum: number }) {
         align-items:center;
     `
 
-    const [history, setHistory] = useState<Value[][]>([Array(squaresNum * squaresNum).fill(null)]);
+    const [history, setHistory] = useState<History[]>([{
+        value: Array(squaresNum * squaresNum).fill(null),
+        position: {
+            row: null,
+            col: null,
+        },
+    }]);
     const [currentMove, setCurrentMove] = useState(0);
     const xIsNext = currentMove % 2 === 0;
     const currentSquares = history[currentMove];
 
 
-    function handlePlay(nextSquares: Value[]) {
-        const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    function handlePlay(nextSquares: Value[], position: Position) {
+        const nextHistory = [...history.slice(0, currentMove + 1), { value: nextSquares, position: position }];
         setHistory(nextHistory);
         setCurrentMove(nextHistory.length - 1);
     }
@@ -27,11 +37,10 @@ export default function Game({ squaresNum }: { squaresNum: number }) {
     }
 
     const move = history.map((u, i) => {
-
-        // const {row, col} = u.position || {}
+        const { row, col } = u.position || {}
         let description;
         if (i > 0) {
-            description = "Go to move #" + i;
+            description = "Go to move #" + i + " 座標" + row + "-" + col;
         } else {
             description = "Go to game start";
         }
@@ -44,7 +53,7 @@ export default function Game({ squaresNum }: { squaresNum: number }) {
     return (
         <GameBoard>
             <div className="game-board">
-                <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} squaresNum={squaresNum} />
+                <Board xIsNext={xIsNext} squares={currentSquares.value} onPlay={handlePlay} squaresNum={squaresNum} />
             </div>
             <div className="game-info">
                 <ol>{move}</ol>
