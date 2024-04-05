@@ -1,8 +1,12 @@
 import { calculateWinner } from '@/utils/calc';
 import { Square } from './square';
 import { BoardRow, Wrapper } from '@/utils/styleComponents';
+import { useGameStatus } from '@/hooks/useGameStatus';
 
 export const Board = ({ nextPlayer, squares, onPlay, squaresNum }: PropBoard) => {
+  const { checkStatus } = useGameStatus(squares, squaresNum, nextPlayer);
+  console.log(checkStatus());
+
   const winner = calculateWinner(squares, squaresNum);
   const winPlayer = winner?.winplayer;
   const winLines = winner ? winner?.winLine : null;
@@ -18,6 +22,8 @@ export const Board = ({ nextPlayer, squares, onPlay, squaresNum }: PropBoard) =>
 
   const handleClick = (i: number) => {
     // startTime();
+    // checkStatus();
+    // console.log('hai', checkStatus());
     const row = Math.floor(i / squaresNum);
     const col = i % squaresNum;
 

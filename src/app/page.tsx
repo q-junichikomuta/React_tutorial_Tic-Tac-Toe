@@ -7,10 +7,18 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { GameStyled } from '@/utils/styleComponents';
+import styled from '@emotion/styled';
 
 export const Home = () => {
   const [squaresNum, setSquaresNum] = useState(3);
+
+  const GameStyled = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: auto;
+  `;
 
   const handleChange = (event: SelectChangeEvent) => {
     setSquaresNum(Number(event.target.value));
