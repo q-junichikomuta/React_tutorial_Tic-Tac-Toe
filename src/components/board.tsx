@@ -22,7 +22,9 @@ export function Board({ xIsNext, squares, onPlay, squaresNum }: PropBoard) {
   const winLines = winner ? winner?.winLine : null;
 
   let status;
-  if (winner) {
+  if (winPlayer === 'Draw') {
+    status = '====引き分け====';
+  } else if (winner) {
     status = 'Winner: ' + winPlayer;
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');

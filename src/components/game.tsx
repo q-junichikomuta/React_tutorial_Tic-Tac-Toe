@@ -2,11 +2,6 @@ import { useMemo, useState } from 'react';
 import { Board } from './board';
 import styled from '@emotion/styled';
 
-type History = {
-  value: Value[];
-  position: Position;
-};
-
 export default function Game({ squaresNum }: { squaresNum: number }) {
   const GameBoard = styled.div`
     display: flex;
@@ -14,7 +9,7 @@ export default function Game({ squaresNum }: { squaresNum: number }) {
     align-items: center;
   `;
 
-  const [history, setHistory] = useState<History[]>([
+  const [history, setHistory] = useState<HistoryType[]>([
     {
       value: Array(squaresNum * squaresNum).fill(null),
       position: {
