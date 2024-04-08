@@ -17,16 +17,49 @@ export const GameBoard = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  position: flex;
-  display: inline-block;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 3fr;
+  grid-template-rows: 1.5fr 1fr 10fr;
+
+  width: 600px;
 `;
 
-export const BoardRow = styled.div`
-  display: flex;
-  width: 300px;
-  height: 50px;
-  margin: 2px;
+export const DarkModeSelect = styled.div`
+  display: inline-block;
+  align-items: center;
 `;
+
+export const TitleStyle = styled.div`
+  text-align: center;
+  padding: 2px;
+  color: #696969;
+  font-size: 16px;
+`;
+
+export const HistoryButton = styled.button`
+  background-color: cornsilk;
+
+  border-color: cyan;
+  border-size: 5px;
+
+  width: 200px;
+  height: 30px;
+
+  margin: 5px;
+  padding: 2px;
+`;
+
+// export const BoardRow = styled.div`
+//   display: grid;
+//   grid-template-columns: repeat(3, 1fr);
+// `;
+
+export const BoardRow = (repeat: number) => {
+  return styled.div`
+    display: grid;
+    grid-template-columns: repeat(${repeat}, 1fr);
+  `;
+};
 
 export const SquareStyle = (bgColor: string, valueColor: string) => {
   return styled.button`
@@ -34,8 +67,7 @@ export const SquareStyle = (bgColor: string, valueColor: string) => {
     text-align: center;
     color: turquoise;
     font-size: 25px;
-    margin: 2px;
-    padding: 10px;
+
     isplay: inline-block;
     width: 50px;
     height: 50px;
