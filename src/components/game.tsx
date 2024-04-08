@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Board } from "./board";
 import styled from '@emotion/styled'
 
@@ -36,7 +36,7 @@ export default function Game({ squaresNum }: { squaresNum: number }) {
         setCurrentMove(nextMove);
     }
 
-    const move = history.map((u, i) => {
+    const move = useMemo(() => history.map((u, i) => {
         const { row, col } = u.position || {}
         let description;
         if (i > 0) {
@@ -49,7 +49,8 @@ export default function Game({ squaresNum }: { squaresNum: number }) {
                 <button onClick={() => jampTo(i)}>{description}</button>
             </li>
         );
-    });
+    }), [history, jampTo]);
+
     return (
         <GameBoard>
             <div className="game-board">
