@@ -17,9 +17,8 @@ export const Board = ({ nextPlayer, squares, onPlay, squaresNum }: PropBoard) =>
   }
 
   const handleClick = (i: number) => {
-    // startTime();
-    const row = Math.floor(i / squaresNum);
-    const col = i % squaresNum;
+    const row = Math.floor(i / squaresNum); // わかりやすく書く
+    const col = i % squaresNum; // わかりやすく書く
 
     if (squares[i] || winner) {
       return;
@@ -29,27 +28,23 @@ export const Board = ({ nextPlayer, squares, onPlay, squaresNum }: PropBoard) =>
     onPlay(nextSquares, { row, col });
   };
 
-  const boardRow = [];
-  for (let row = 0; row < squaresNum; row++) {
-    const squaresRow = [];
-    for (let col = 0; col < squaresNum; col++) {
-      const squaresIndex = row * squaresNum + col;
-      squaresRow.push(
-        <Square
-          key={`Square-${col + 1}`}
-          value={squares[squaresIndex]}
-          onClick={() => handleClick(squaresIndex)}
-          winLine={winLines?.includes(squaresIndex) ? winLines : null}
-        />
-      );
-    }
-    boardRow.push(<BoardRow key={`BoardRow-${row + 1}`}>{squaresRow}</BoardRow>);
-  }
+  const squareAll = [...Array(squaresNum * squaresNum)].map((_, i) => (
+    <Square
+      key={`Square-${i + 1}`} // 今回はindecでKeyを付けたが、ユニークIDなどがあればそれをつける
+      value={squares[i]}
+      onClick={() => handleClick(i)}
+      winLine={winLines?.includes(i) ? winLines : null}
+    />
+  ));
+
+  const borad = [...Array(squaresNum)].map((_, i) => (
+    <BoardRow key={`BoardRow-${i + 1}`}>{squareAll.slice(i * squaresNum, (i + 1) * squaresNum)}</BoardRow>
+  ));
 
   return (
     <Wrapper>
       <div>{status}</div>
-      <div>{boardRow}</div>
+      <div>{borad}</div>
     </Wrapper>
   );
 };

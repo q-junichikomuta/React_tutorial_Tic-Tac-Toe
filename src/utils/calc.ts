@@ -1,61 +1,18 @@
-// 勝利に必要な列を判定する関数
-export const calculateWinLine = (num: number) => {
-  // 勝利条件の列を格納する配列
-  const winLine = [];
-
-  // 横軸の勝利条件の列
-  // →配列の中身が+1だけ違う
-  for (let k = 0; k < num; k++) {
-    const array = [];
-    for (let i = k * num; array.length < num; i++) {
-      array.push(i);
-    }
-    winLine.push(array);
-  }
-
-  // 縦軸の勝利条件の列
-  // →配列の中身が+マス目分だけ違う
-  for (let k = 0; k < num; k++) {
-    const array = [];
-    for (let i = k; array.length < num; i = i + num) {
-      array.push(i);
-    }
-    winLine.push(array);
-  }
-
-  // 左上から右下の斜め軸の勝利条件の列
-  // →配列の中身がマス目+1だけ違う
-  for (let k = 0; k < 1; k++) {
-    const array = [];
-    for (let i = k; array.length < num; i = i + num + 1) {
-      array.push(i);
-    }
-    winLine.push(array);
-  }
-
-  // 左下から右上の斜め軸の勝利条件の列
-  // →開始を右上（マス目-1のインデックス）として、配列の中身がマス目-1だけ違う
-  for (let k = 0; k < 1; k++) {
-    const array = [];
-    for (let i = k + num - 1; array.length < num; i = i + num - 1) {
-      array.push(i);
-    }
-    winLine.push(array);
-  }
-
-  return winLine;
-};
+import { winLineGenerator } from './winLineGenerator';
 
 // 勝者もしくは引き分けを判定する関数
 export const calculateWinner = (squares: Value[], num: number) => {
   // 勝利列のインデックスの配列
   // ex:[0,1,2],[3,4,5],[6,7,8],[0,3,6]...
-  const lines = calculateWinLine(num);
+  const lines = winLineGenerator(num);
+
+  // console.log('lines', lines);
+
   const lineAll: number[][] = [];
   const squareAll: Value[][] = [];
 
-  console.log('lineAll', lineAll);
-  console.log('squareAll', squareAll);
+  // console.log('lineAll', lineAll);
+  // console.log('squareAll', squareAll);
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
