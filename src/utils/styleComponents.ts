@@ -1,70 +1,49 @@
 import styled from '@emotion/styled';
 
-export const DarkMode = `
-  background-color: white;
-  color: black;
-`;
-
-export const LightMode = `
-  background-color: black;
-  color: white;
-`;
-
-export const TestFont = (darkMode: boolean) => {
-  return styled.div`
-    ${darkMode ? DarkMode : LightMode}
-  `;
+const DarkTheme = {
+  'background-color': '#11151B',
+  color: 'white',
 };
 
-// 全体のレイアウトなのでCssで良さそう
-export const GameStyled = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: auto;
-  height: auto;
+const LightTheme = {
+  'background-color': 'cornsilk',
+  color: 'black',
+};
+
+// ダークモードによってスタイルが変わるコンポーネント
+export const styleComponents = (darkMode: boolean) => {
+  const Theme = darkMode ? DarkTheme : LightTheme;
+  const ThemeBg = Theme['background-color'];
+  const ThemeColor = Theme['color'];
+
+  const ThemeColors = `
+  background-color: ${ThemeBg};
+  color: ${ThemeColor};
 `;
 
-// ゲームのマス目とヒストリーボタン軍→あとでそれぞれのコンポーネントに分ける
-export const GameBoard = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+  // 全体のスタイル
+  const Wrapper = styled.div`
+    ${ThemeColors}
+    display: flex;
+    font-family: sans-serif;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+  `;
 
-export const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 3fr;
-  grid-template-rows: 1.5fr 1fr 10fr;
+  // タイトルテキスト用のスタイル
+  const TitleStyle = styled.div`
+    text-align: center;
+    padding: 2px;
+    color: ${ThemeColor};
+    font-size: 16px;
+  `;
 
-  width: 600px;
-`;
+  return { Wrapper, TitleStyle };
+};
 
-export const DarkModeSelect = styled.div`
-  display: inline-block;
-  align-items: center;
-`;
-
-export const TitleStyle = styled.div`
-  text-align: center;
-  padding: 2px;
-  color: #696969;
-  font-size: 16px;
-`;
-
-export const HistoryButton = styled.button`
-  background-color: cornsilk;
-
-  border-color: cyan;
-  border-size: 5px;
-
-  width: 200px;
-  height: 30px;
-
-  margin: 5px;
-  padding: 2px;
-`;
-
+// squareを並べるコンポーネント
 export const BoardGrid = (repeat: number) => {
   return styled.div`
     display: grid;
@@ -72,6 +51,7 @@ export const BoardGrid = (repeat: number) => {
   `;
 };
 
+// spuareのスタイルコンポーネント
 export const SquareStyle = (bgColor: string, hoverColor: string) => {
   return styled.button`
     background-color: ${bgColor};

@@ -1,6 +1,7 @@
-import { TitleStyle } from '@/utils/styleComponents';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { MouseEvent } from 'react';
+import { MouseEvent, useContext } from 'react';
+import { DarkModeContext } from '@/app/page';
+import { styleComponents } from '@/utils/styleComponents';
 
 type Props = {
   oneSideNum: number;
@@ -8,6 +9,8 @@ type Props = {
 };
 
 export const GameModeSerector = ({ oneSideNum, handleChange }: Props) => {
+  const isDarkMode = useContext(DarkModeContext);
+  const { TitleStyle } = styleComponents(isDarkMode);
   return (
     <div>
       <TitleStyle>ゲームモードを選択</TitleStyle>

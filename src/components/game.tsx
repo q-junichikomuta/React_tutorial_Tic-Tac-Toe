@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Board } from './board';
-import { BoardGrid, GameBoard, HistoryButton } from '@/utils/styleComponents';
+import { BoardGrid } from '@/utils/styleComponents';
 import { History } from './history';
 import { Button, Stack } from '@mui/material';
 import { useGameStatus } from '@/hooks/useGameStatus';
 import { positionGenerator } from '@/utils/positionGenerator';
 import { Square } from './square';
+import { mediaQuery, useMediaQuery } from '@/hooks/useMedisQuery';
 
 export const Game = ({ oneSideNum }: { oneSideNum: number }) => {
+  const isSp = useMediaQuery(mediaQuery.sp);
+
   const [page, setPage] = useState(0);
 
   const [historyText, setHistoryText] = useState('試合待機中・・・');
@@ -26,10 +29,8 @@ export const Game = ({ oneSideNum }: { oneSideNum: number }) => {
 
   const currentSquares = history[currentMove];
 
-  const { text, status, setStatus, wonLine, time, TIMEUP, checkStatus, surrender, resetTime } = useGameStatus(
-    oneSideNum,
-    nextPlayer
-  );
+  const { text, status, setStatus, wonLine, setWonLine, time, TIMEUP, checkStatus, surrender, resetTime } =
+    useGameStatus(oneSideNum, nextPlayer);
 
   const handlePlay = (nextSquares: Value[], position: Position) => {
     const nextHistory = [...history.slice(0, currentMove + 1), { value: nextSquares, position: position }];
@@ -70,6 +71,7 @@ export const Game = ({ oneSideNum }: { oneSideNum: number }) => {
   const pageUpdate = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
     jampTo(value);
+    setWonLine(null);
   };
 
   const squares = currentSquares.value;
@@ -85,7 +87,6 @@ export const Game = ({ oneSideNum }: { oneSideNum: number }) => {
 
     const nextSquares = squares.slice();
     nextSquares[i] = nextPlayer ? 'X' : 'O';
-    console.log('nextSquares', nextSquares);
 
     handlePlay(nextSquares, position[i]);
     checkStatus(nextSquares);
@@ -103,8 +104,7 @@ export const Game = ({ oneSideNum }: { oneSideNum: number }) => {
   const PlayBoard = BoardGrid(oneSideNum);
 
   return (
-    <GameBoard>
-      {/* <Board nextPlayer={nextPlayer} squares={currentSquares.value} onPlay={handlePlay} oneSideNum={oneSideNum} /> */}
+    <Stack spacing={2} direction={isSp ? 'column' : 'row'} alignItems="center" justifyContent="center">
       <Stack>
         <div>{text}</div>
         <div>{TIMEUP ? '時間切れ' : `制限時間:${time}秒`}</div>
@@ -114,6 +114,6 @@ export const Game = ({ oneSideNum }: { oneSideNum: number }) => {
         </Button>
       </Stack>
       <History historyText={historyText} historyLength={history.length - 1} page={page} pageUpdate={pageUpdate} />
-    </GameBoard>
+    </Stack>
   );
 };
