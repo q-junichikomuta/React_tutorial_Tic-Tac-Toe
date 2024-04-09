@@ -34,5 +34,5 @@ export const useCountDownTimer = () => {
     }
     intervalID.current = window.setInterval(countDown, 1000);
   };
-  return { time, startTime, stopTime };
+  return { time, startTime, stopTime, resetTime };
 };

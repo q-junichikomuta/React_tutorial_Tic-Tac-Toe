@@ -6,7 +6,7 @@ type Status = 'before' | 'now' | 'winX' | 'winO' | 'draw';
 type WonLine = number[] | null;
 
 export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
-  const { time, startTime, stopTime } = useCountDownTimer();
+  const { time, startTime, stopTime, resetTime } = useCountDownTimer();
   const TIMEUP = time <= 0;
 
   const [text, setText] = useState(`${oneSideNum}目並べで勝負！`);
@@ -94,5 +94,5 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
     }
   }, [status, nextPlayer, time]);
 
-  return { text, status, wonLine, time, TIMEUP, checkStatus, surrender };
+  return { text, status, setStatus, wonLine, time, TIMEUP, checkStatus, surrender, startTime, resetTime };
 };

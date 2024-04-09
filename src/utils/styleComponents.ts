@@ -72,18 +72,18 @@ export const BoardGrid = (repeat: number) => {
   `;
 };
 
-export const SquareStyle = (bgColor: string, valueColor: string) => {
+export const SquareStyle = (bgColor: string, hoverColor: string) => {
   return styled.button`
     background-color: ${bgColor};
     text-align: center;
-    color: turquoise;
+    color: tomato;
     font-size: 25px;
 
     isplay: inline-block;
     width: 50px;
     height: 50px;
     &:hover {
-      background-color: ${valueColor};
+      background-color: ${hoverColor};
     }
   `;
 };
