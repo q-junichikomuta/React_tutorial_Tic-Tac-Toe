@@ -1,5 +1,21 @@
 import styled from '@emotion/styled';
 
+export const DarkMode = `
+  background-color: white;
+  color: black;
+`;
+
+export const LightMode = `
+  background-color: black;
+  color: white;
+`;
+
+export const TestFont = (darkMode: boolean) => {
+  return styled.div`
+    ${darkMode ? DarkMode : LightMode}
+  `;
+};
+
 // 全体のレイアウトなのでCssで良さそう
 export const GameStyled = styled.div`
   display: flex;
@@ -49,12 +65,7 @@ export const HistoryButton = styled.button`
   padding: 2px;
 `;
 
-// export const BoardRow = styled.div`
-//   display: grid;
-//   grid-template-columns: repeat(3, 1fr);
-// `;
-
-export const BoardRow = (repeat: number) => {
+export const BoardGrid = (repeat: number) => {
   return styled.div`
     display: grid;
     grid-template-columns: repeat(${repeat}, 1fr);

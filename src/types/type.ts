@@ -1,14 +1,15 @@
-// マス目に入るValueの定義
+// マス目に入るValueの定義s
 type Value = 'X' | 'O' | null;
 
-type Position = {
-  row: number | null;
-  col: number | null;
-};
+type Position = string | null;
+// {
+//   row: number | null;
+//   col: number | null;
+// };
 
 type HistoryType = {
   value: Value[];
-  position: Position;
+  position: string | null;
 };
 
 type ArrayValue = Array<Value>;
@@ -16,12 +17,12 @@ type ArrayValue = Array<Value>;
 type PropSquare = {
   value: Value;
   onClick: () => void;
-  winLine: number[] | null;
+  winLine: boolean;
 };
 
 type PropBoard = {
   nextPlayer: boolean;
   squares: Value[];
   onPlay: (nextSquares: Value[], position: Position) => void;
-  squaresNum: number;
+  oneSideNum: number;
 };

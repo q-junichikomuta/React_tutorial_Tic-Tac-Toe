@@ -1,48 +1,34 @@
 'use client';
 
 import { Game } from '@/components/game';
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import styled from '@emotion/styled';
+import { SelectChangeEvent } from '@mui/material/Select';
+import { GameModeSerector } from '@/components/gameModeSelector';
+import { GameStyled, TitleStyle, Wrapper } from '@/utils/styleComponents';
+import { DarkModeButton } from '@/components/darkModeButton';
+import { History } from '@/components/history';
+import { useDarkMode } from '@/hooks/useDrakMode';
 
 export const Home = () => {
-  const [squaresNum, setSquaresNum] = useState(3);
+  const [oneSideNum, setOneSideNum] = useState(3); // 一辺の長さ = n目並べのn
+  const { isDarkMode, handleDrakMode } = useDarkMode();
 
-  const GameStyled = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: auto;
-    height: auto;
-  `;
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setSquaresNum(Number(event.target.value));
+  const oneSideNumChange = (_event: MouseEvent<HTMLElement>, newValue: string) => {
+    if (newValue !== null) {
+      setOneSideNum(Number(newValue));
+    }
   };
 
   return (
-    <GameStyled>
-      <FormControl variant="standard" sx={{ width: 200 }}>
-        <InputLabel id="demo-simple-select-label">対戦モードを選択してください</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={String(squaresNum)}
-          size="small"
-          label="対戦モード"
-          onChange={handleChange}
-        >
-          <MenuItem value={3}>3×3</MenuItem>
-          <MenuItem value={4}>4×4</MenuItem>
-          <MenuItem value={5}>5×5</MenuItem>
-        </Select>
-      </FormControl>
-      <Game squaresNum={squaresNum} />
-    </GameStyled>
+    <>
+      <GameStyled key={`${oneSideNum}-GameMode`}>
+        <GameModeSerector oneSideNum={oneSideNum} handleChange={oneSideNumChange} />
+        <DarkModeButton isDarkMode={isDarkMode} handleDrakMode={handleDrakMode} />
+        <Game oneSideNum={oneSideNum} />
+        <div>{isDarkMode ? 'ダークモードだよ' : 'ライトモードだよ'}</div>
+      </GameStyled>
+    </>
   );
 };
 
