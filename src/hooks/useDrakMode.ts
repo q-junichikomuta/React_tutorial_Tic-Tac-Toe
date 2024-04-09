@@ -1,12 +1,15 @@
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 export const useDarkMode = () => {
   // ダークモードの状態を管理するState
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const handleDrakMode = (event: ChangeEvent<HTMLInputElement>) => {
-    setIsDarkMode(event.target.checked);
-  };
+  const handleDrakMode = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setIsDarkMode(event.target.checked);
+    },
+    [isDarkMode]
+  );
 
   // OSのテーマに沿ってダークモードを決める
   const initialTheme = () => {

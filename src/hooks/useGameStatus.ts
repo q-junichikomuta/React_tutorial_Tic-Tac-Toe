@@ -2,7 +2,7 @@ import { winLineGenerator } from '@/utils/winLineGenerator';
 import { useCallback, useEffect, useState } from 'react';
 import { useCountDownTimer } from './useCountDownTimer';
 
-type Status = 'before' | 'now' | 'winX' | 'winO' | 'draw';
+type Status = 'before' | 'interval' | 'now' | 'winX' | 'winO' | 'draw';
 type WonLine = number[] | null;
 
 export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
@@ -40,43 +40,46 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
     return isAllIncludes(checkText, joined);
   };
 
-  const checkStatus = (value: Value[]) => {
-    startTime();
-    const squareValues = squareValuesGenerator(value);
+  const checkStatus = useCallback(
+    (value: Value[]) => {
+      startTime();
+      const squareValues = squareValuesGenerator(value);
 
-    // 先に全ての勝利配列の引分判定を調べる
-    const draw = [...Array(winLines.length)].map((_, i) => {
-      return checkDraw(squareValues[i]);
-    });
+      // 先に全ての勝利配列の引分判定を調べる
+      const draw = [...Array(winLines.length)].map((_, i) => {
+        return checkDraw(squareValues[i]);
+      });
 
-    // 全ての勝利配列が引分判定（=XとOが含まれる）だったら、Statusをdrawにする
-    if (draw.every((val) => val === true)) {
-      setStatus('draw');
+      // 全ての勝利配列が引分判定（=XとOが含まれる）だったら、Statusをdrawにする
+      if (draw.every((val) => val === true)) {
+        setStatus('draw');
+        return;
+      }
+
+      // 勝利判定を調べる
+      const win = [...Array(winLines.length)].map((_, i) => {
+        return checkWin(squareValues[i]);
+      });
+
+      // 勝利した配列が存在していればStatusを勝者に更新する
+      if (win.some((val) => val === true)) {
+        const INDEX = win.findIndex((val) => val === true);
+
+        setStatus(squareValues[INDEX][0] === 'X' ? 'winX' : 'winO');
+        setWonLine(winLines[INDEX]);
+        return;
+      }
+
+      // 勝利でも引き分けでもなければゲーム続行
+      setStatus('now');
       return;
-    }
+    },
+    [checkWin, checkDraw, status, wonLine]
+  );
 
-    // 勝利判定を調べる
-    const win = [...Array(winLines.length)].map((_, i) => {
-      return checkWin(squareValues[i]);
-    });
-
-    // 勝利した配列が存在していればStatusを勝者に更新する
-    if (win.some((val) => val === true)) {
-      const INDEX = win.findIndex((val) => val === true);
-
-      setStatus(squareValues[INDEX][0] === 'X' ? 'winX' : 'winO');
-      setWonLine(winLines[INDEX]);
-      return;
-    }
-
-    // 勝利でも引き分けでもなければゲーム続行
-    setStatus('now');
-    return;
-  };
-
-  const surrender = () => {
+  const surrender = useCallback(() => {
     setStatus(nextPlayer ? 'winO' : 'winX');
-  };
+  }, [status]);
 
   // statusの状況によってTextを更新
   useEffect(() => {
@@ -88,6 +91,9 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
     } else if (status === 'winX' || status === 'winO' || TIMEUP) {
       stopTime();
       setText(nextPlayer ? '勝者:O' : '勝者:X');
+    } else if (status === 'interval') {
+      stopTime();
+      setText('待機中・・・');
     } else {
       setText(nextPlayer ? `次の手番:X` : `次の手番:O`);
     }
