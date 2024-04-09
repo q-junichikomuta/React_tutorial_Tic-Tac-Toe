@@ -1,22 +1,8 @@
-import { useCalc } from '@/hooks/calc';
-import Square from './square';
-import styled from '@emotion/styled';
+import { calculateWinner } from '@/utils/calc';
+import { Square } from './square';
+import { BoardRow, Wrapper } from '@/utils/styleComponents';
 
-export function Board({ xIsNext, squares, onPlay, squaresNum }: PropBoard) {
-  const calculateWinner = useCalc();
-
-  const Wrapper = styled.div`
-    position: flex;
-    display: inline-block;
-  `;
-
-  const BoardRow = styled.div`
-    display: flex;
-    width: 300px;
-    height: 50px;
-    margin: 2px;
-  `;
-
+export const Board = ({ nextPlayer, squares, onPlay, squaresNum }: PropBoard) => {
   const winner = calculateWinner(squares, squaresNum);
   const winPlayer = winner?.winplayer;
   const winLines = winner ? winner?.winLine : null;
@@ -25,12 +11,13 @@ export function Board({ xIsNext, squares, onPlay, squaresNum }: PropBoard) {
   if (winPlayer === 'Draw') {
     status = '====引き分け====';
   } else if (winner) {
-    status = 'Winner: ' + winPlayer;
+    status = `Winner:${winPlayer}`;
   } else {
-    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
+    status = `Next player:${nextPlayer ? 'X' : 'O'}`;
   }
 
-  function handleClick(i: number) {
+  const handleClick = (i: number) => {
+    // startTime();
     const row = Math.floor(i / squaresNum);
     const col = i % squaresNum;
 
@@ -38,9 +25,9 @@ export function Board({ xIsNext, squares, onPlay, squaresNum }: PropBoard) {
       return;
     }
     const nextSquares = squares.slice();
-    nextSquares[i] = xIsNext ? 'X' : 'O';
+    nextSquares[i] = nextPlayer ? 'X' : 'O';
     onPlay(nextSquares, { row, col });
-  }
+  };
 
   const boardRow = [];
   for (let row = 0; row < squaresNum; row++) {
@@ -65,4 +52,4 @@ export function Board({ xIsNext, squares, onPlay, squaresNum }: PropBoard) {
       <div>{boardRow}</div>
     </Wrapper>
   );
-}
+};

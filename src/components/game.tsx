@@ -1,14 +1,9 @@
 import { useMemo, useState } from 'react';
 import { Board } from './board';
-import styled from '@emotion/styled';
+import { Timer } from './timer';
+import { GameBoard } from '@/utils/styleComponents';
 
-export default function Game({ squaresNum }: { squaresNum: number }) {
-  const GameBoard = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `;
-
+export const Game = ({ squaresNum }: { squaresNum: number }) => {
   const [history, setHistory] = useState<HistoryType[]>([
     {
       value: Array(squaresNum * squaresNum).fill(null),
@@ -18,20 +13,25 @@ export default function Game({ squaresNum }: { squaresNum: number }) {
       },
     },
   ]);
+
+  // 現在のターン数を管理するState
   const [currentMove, setCurrentMove] = useState(0);
-  const xIsNext = currentMove % 2 === 0;
+
+  // 現在のターン数が、奇数なら次の手番はO、偶数なら次の手番はX
+  const nextPlayer = currentMove % 2 === 0;
+
   const currentSquares = history[currentMove];
 
-  function handlePlay(nextSquares: Value[], position: Position) {
+  const handlePlay = (nextSquares: Value[], position: Position) => {
     const nextHistory = [...history.slice(0, currentMove + 1), { value: nextSquares, position: position }];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
-  }
+  };
 
-  function jampTo(nextMove: number) {
+  const jampTo = (nextMove: number) => {
     setCurrentMove(nextMove);
     console.log('ボタンが押されたよ');
-  }
+  };
 
   const move = useMemo(
     () =>
@@ -39,7 +39,7 @@ export default function Game({ squaresNum }: { squaresNum: number }) {
         const { row, col } = u.position || {};
         let description;
         if (i > 0) {
-          description = 'Go to move #' + i + ' 座標' + row + '-' + col;
+          description = `Go to move #${i} 座標${row}-${col}`;
         } else {
           description = 'Go to game start';
         }
@@ -54,12 +54,13 @@ export default function Game({ squaresNum }: { squaresNum: number }) {
 
   return (
     <GameBoard>
+      <Timer />
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares.value} onPlay={handlePlay} squaresNum={squaresNum} />
+        <Board nextPlayer={nextPlayer} squares={currentSquares.value} onPlay={handlePlay} squaresNum={squaresNum} />
       </div>
       <div className="game-info">
         <ol>{move}</ol>
       </div>
     </GameBoard>
   );
-}
+};

@@ -1,23 +1,16 @@
 'use client';
 
-import Game from '@/components/game';
-import styled from '@emotion/styled';
+import { Game } from '@/components/game';
 import { useState } from 'react';
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { GameStyled } from '@/utils/styleComponents';
 
-export default function Home() {
+export const Home = () => {
   const [squaresNum, setSquaresNum] = useState(3);
-  const GameStyled = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: auto;
-    height: auto;
-  `;
 
   const handleChange = (event: SelectChangeEvent) => {
     setSquaresNum(Number(event.target.value));
@@ -43,4 +36,6 @@ export default function Home() {
       <Game squaresNum={squaresNum} />
     </GameStyled>
   );
-}
+};
+
+export default Home;
