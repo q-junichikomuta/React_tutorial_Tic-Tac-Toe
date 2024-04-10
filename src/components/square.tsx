@@ -1,6 +1,12 @@
 import { SquareStyle } from '@/utils/styleComponents';
 
-export const Square = ({ value, onClick, winLine }: PropSquare) => {
+type Props = {
+  value: Value;
+  onClick: () => void;
+  winLine: boolean;
+};
+
+export const Square = ({ value, onClick, winLine }: Props) => {
   const bgColor = () => {
     if (winLine) {
       return 'white';

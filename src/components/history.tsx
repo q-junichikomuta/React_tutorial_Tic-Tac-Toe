@@ -1,13 +1,15 @@
-import { Box, Pagination, Stack } from '@mui/material';
+import { MouseEventHandler } from 'react';
+import { Box, Button, Pagination, Stack } from '@mui/material';
 
 type Props = {
   historyText: string;
   page: number;
   pageUpdate: (_event: React.ChangeEvent<unknown>, value: number) => void;
   historyLength: number;
+  restart: MouseEventHandler<HTMLButtonElement>;
 };
 
-export const History = ({ historyText, historyLength, page, pageUpdate }: Props) => {
+export const History = ({ historyText, historyLength, page, pageUpdate, restart }: Props) => {
   return (
     <Stack spacing={1} justifyContent="center" alignContent="center">
       <Box
@@ -28,6 +30,9 @@ export const History = ({ historyText, historyLength, page, pageUpdate }: Props)
         siblingCount={0}
         boundaryCount={1}
       />
+      <Button variant="outlined" color="primary" onClick={restart}>
+        はじめから
+      </Button>
     </Stack>
   );
 };
