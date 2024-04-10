@@ -6,7 +6,7 @@ type Status = 'before' | 'now' | 'winX' | 'winO' | 'draw';
 type WonLine = number[] | null;
 
 export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
-  const { time, startTime, stopTime } = useCountDownTimer();
+  const { time, startTime, stopTime, resetTime } = useCountDownTimer();
   const TIMEUP = time <= 0;
 
   const [text, setText] = useState(`${oneSideNum}目並べで勝負！`);
@@ -63,7 +63,6 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
     // 勝利した配列が存在していればStatusを勝者に更新する
     if (win.some((val) => val === true)) {
       const INDEX = win.findIndex((val) => val === true);
-      console.log(winLines[INDEX]);
 
       setStatus(squareValues[INDEX][0] === 'X' ? 'winX' : 'winO');
       setWonLine(winLines[INDEX]);
@@ -94,5 +93,5 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
     }
   }, [status, nextPlayer, time]);
 
-  return { text, status, wonLine, time, TIMEUP, checkStatus, surrender };
+  return { text, status, setStatus, wonLine, setWonLine, time, TIMEUP, checkStatus, surrender, startTime, resetTime };
 };

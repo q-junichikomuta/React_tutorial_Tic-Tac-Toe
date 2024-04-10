@@ -1,56 +1,33 @@
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { Radio } from '@mui/material';
-import { useState } from 'react';
-
-type Row = {
-  turn: number;
-  player: string;
-  position: string | null;
-};
+import { Box, Pagination, Stack } from '@mui/material';
 
 type Props = {
-  rows: Row[];
-  jampTo: (nextMove: number) => void;
+  historyText: string;
+  page: number;
+  pageUpdate: (_event: React.ChangeEvent<unknown>, value: number) => void;
+  historyLength: number;
 };
 
-export const History = ({ rows, jampTo }: Props) => {
-  const [selected, setSlected] = useState(0);
-
-  const onClick = (selectId: number) => {
-    jampTo(selectId);
-    setSlected(selectId);
-  };
-
+export const History = ({ historyText, historyLength, page, pageUpdate }: Props) => {
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="history table">
-        <TableHead>
-          <TableRow>
-            <TableCell>{/* Radio Button */}</TableCell>
-            <TableCell>Turn</TableCell>
-            <TableCell>Player</TableCell>
-            <TableCell>Position</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows?.map((row, i) => (
-            <TableRow key={`${row.turn}-${row.player}`} onClick={() => onClick(i)}>
-              <TableCell>
-                <Radio checked={selected === i} />
-              </TableCell>
-              <TableCell>{row.turn}</TableCell>
-              <TableCell>{row.player}</TableCell>
-              <TableCell>{row.position}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Stack spacing={1} justifyContent="center" alignContent="center">
+      <Box
+        component="section"
+        sx={{ width: 300, p: 2, border: '1px dashed grey' }}
+        textAlign="center"
+        justifyContent="center"
+      >
+        {historyText}
+      </Box>
+      <Pagination
+        color="primary"
+        sx={{ width: 300 }}
+        count={historyLength}
+        disabled={page === 0}
+        page={page}
+        onChange={pageUpdate}
+        siblingCount={0}
+        boundaryCount={1}
+      />
+    </Stack>
   );
 };

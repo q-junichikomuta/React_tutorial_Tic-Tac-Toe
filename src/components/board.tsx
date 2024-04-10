@@ -38,7 +38,7 @@ export const Board = ({ nextPlayer, squares, onPlay, oneSideNum }: PropBoard) =>
   return (
     <Stack>
       <div>{text}</div>
-      <div>制限時間:{time}秒</div>
+      <div>{TIMEUP ? '時間切れ' : `制限時間:${time}秒`}</div>
       <PlayBoard>{squareAll}</PlayBoard>
       <Button variant="contained" size="small" color="error" onClick={surrender}>
         投了
