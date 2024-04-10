@@ -1,16 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Board } from './board';
-import { Timer } from './timer';
-import { GameBoard } from '@/utils/styleComponents';
+import { GameBoard, HistoryButton } from '@/utils/styleComponents';
+import { History } from './history';
 
-export const Game = ({ squaresNum }: { squaresNum: number }) => {
+export const Game = ({ oneSideNum }: { oneSideNum: number }) => {
   const [history, setHistory] = useState<HistoryType[]>([
     {
-      value: Array(squaresNum * squaresNum).fill(null),
-      position: {
-        row: null,
-        col: null,
-      },
+      value: Array(oneSideNum * oneSideNum).fill(null),
+      position: null,
     },
   ]);
 
@@ -21,6 +18,7 @@ export const Game = ({ squaresNum }: { squaresNum: number }) => {
   const nextPlayer = currentMove % 2 === 0;
 
   const currentSquares = history[currentMove];
+  console.log(currentSquares);
 
   const handlePlay = (nextSquares: Value[], position: Position) => {
     const nextHistory = [...history.slice(0, currentMove + 1), { value: nextSquares, position: position }];
@@ -30,37 +28,22 @@ export const Game = ({ squaresNum }: { squaresNum: number }) => {
 
   const jampTo = (nextMove: number) => {
     setCurrentMove(nextMove);
-    console.log('ボタンが押されたよ');
   };
 
-  const move = useMemo(
-    () =>
-      history.map((u, i) => {
-        const { row, col } = u.position || {};
-        let description;
-        if (i > 0) {
-          description = `Go to move #${i} 座標${row}-${col}`;
-        } else {
-          description = 'Go to game start';
-        }
-        return (
-          <li key={i}>
-            <button onClick={() => jampTo(i)}>{description}</button>
-          </li>
-        );
-      }),
-    [history, jampTo]
-  );
+  const move = history?.map((u, i) => {
+    const position = u.position || null;
+    return {
+      turn: i,
+      player: i % 2 === 0 ? 'O' : 'X',
+      position: position,
+    };
+  });
 
   return (
     <GameBoard>
-      <Timer />
-      <div className="game-board">
-        <Board nextPlayer={nextPlayer} squares={currentSquares.value} onPlay={handlePlay} squaresNum={squaresNum} />
-      </div>
-      <div className="game-info">
-        <ol>{move}</ol>
-      </div>
+      <Board nextPlayer={nextPlayer} squares={currentSquares.value} onPlay={handlePlay} oneSideNum={oneSideNum} />
+      <button onClick={() => setCurrentMove(0)}>testdayo</button>
+      <History rows={move} jampTo={jampTo} />
     </GameBoard>
   );
 };
