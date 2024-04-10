@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Stack } from '@mui/system';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Game } from '@/components/game';
@@ -9,12 +9,10 @@ import { DarkModeButton } from '@/components/darkModeButton';
 import { styleComponents } from '@/utils/styleComponents';
 import { useDarkMode } from '@/hooks/useDrakMode';
 import { mediaQuery, useMediaQuery } from '@/hooks/useMedisQuery';
+import { ResponsiveProvider } from '@/components/responsiveProvider';
+import { DarkModeProvider } from '@/components/darkModeProvider';
 
-// 全コンポーネントでダークモードおよびレスポンシブを管理したいので、useContextを使用
-export const DarkModeContext = createContext(false);
-export const ResponsiveContext = createContext(false);
-
-export const Home = () => {
+export default function Home() {
   const [oneSideNum, setOneSideNum] = useState(3); // 一辺の長さ = n目並べのn
   const { isDarkMode, handleDrakMode } = useDarkMode(); // ダークモードを管理するカスタムフック
   const isSp = useMediaQuery(mediaQuery.sp); // レスポンシブを管理するカスタムフック
@@ -28,19 +26,16 @@ export const Home = () => {
 
   const { Wrapper } = styleComponents(isDarkMode);
 
-  const oneSideNumChange = useCallback(
-    (_event: unknown, newValue: string) => {
-      if (newValue !== null) {
-        setOneSideNum(Number(newValue));
-      }
-    },
-    [oneSideNum]
-  );
+  const oneSideNumChange = useCallback((_event: unknown, newValue: string) => {
+    if (newValue !== null) {
+      setOneSideNum(Number(newValue));
+    }
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
-      <DarkModeContext.Provider value={isDarkMode}>
-        <ResponsiveContext.Provider value={isSp}>
+      <DarkModeProvider value={isDarkMode}>
+        <ResponsiveProvider value={isSp}>
           <Wrapper key={`${oneSideNum}-GameMode`}>
             <Stack spacing={2} direction={isSp ? 'column' : 'row'} alignItems="center" justifyContent="center">
               <Stack spacing={2} direction="row" alignItems="center" justifyContent="center">
@@ -50,10 +45,8 @@ export const Home = () => {
               <Game oneSideNum={oneSideNum} />
             </Stack>
           </Wrapper>
-        </ResponsiveContext.Provider>
-      </DarkModeContext.Provider>
+        </ResponsiveProvider>
+      </DarkModeProvider>
     </ThemeProvider>
   );
-};
-
-export default Home;
+}

@@ -5,6 +5,11 @@ export const useCountDownTimer = () => {
   const intervalID: MutableRefObject<number | undefined> = useRef(undefined);
   const [time, setTime] = useState<number>(defaultTime);
 
+  const stopTime = useCallback(() => {
+    clearInterval(intervalID.current);
+    // intervalID.current = undefined;
+  }, [intervalID]);
+
   const countDown = useCallback(() => {
     setTime((prev) => {
       let currentTime = prev;
@@ -16,23 +21,18 @@ export const useCountDownTimer = () => {
       }
       return currentTime;
     });
-  }, [time, setTime]);
-
-  const stopTime = useCallback(() => {
-    clearInterval(intervalID.current);
-    // intervalID.current = undefined;
-  }, [time, setTime, intervalID]);
+  }, [setTime, stopTime]);
 
   const resetTime = useCallback(() => {
     stopTime();
     setTime(defaultTime);
-  }, [time, setTime, stopTime]);
+  }, [setTime, stopTime]);
 
   const startTime = useCallback(() => {
     if (time >= 0) {
       resetTime();
     }
     intervalID.current = window.setInterval(countDown, 1000);
-  }, [time, setTime, resetTime, intervalID]);
+  }, [time, resetTime, intervalID, countDown]);
   return { time, startTime, stopTime, resetTime };
 };

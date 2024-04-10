@@ -1,7 +1,7 @@
 import { ChangeEvent, useContext } from 'react';
 import { Stack, Switch } from '@mui/material';
-import { DarkModeContext } from '@/app/page';
 import { styleComponents } from '@/utils/styleComponents';
+import { DarkModeContext } from '@/utils/context';
 
 type Props = {
   handleDrakMode: (event: ChangeEvent<HTMLInputElement>) => void;
