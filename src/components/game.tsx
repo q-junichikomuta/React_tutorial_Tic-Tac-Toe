@@ -48,7 +48,7 @@ export const Game = ({ oneSideNum }: { oneSideNum: number }) => {
         </Button>
       </Stack>
       <History
-        historyText={historyText}
+        text={historyText}
         historyLength={history.length - 1}
         page={page}
         pageUpdate={pageUpdate}

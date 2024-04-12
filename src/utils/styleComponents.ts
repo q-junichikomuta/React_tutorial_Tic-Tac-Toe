@@ -44,26 +44,22 @@ export const styleComponents = (darkMode: boolean) => {
 };
 
 // squareを並べるコンポーネント
-export const BoardGrid = (repeat: number) => {
-  return styled.div`
-    display: grid;
-    grid-template-columns: repeat(${repeat}, 1fr);
-  `;
-};
+export const BoardGrid = (repeat: number) => styled.div`
+  display: grid;
+  grid-template-columns: repeat(${repeat}, 1fr);
+`;
 
 // spuareのスタイルコンポーネント
-export const SquareStyle = (bgColor: string, hoverColor: string) => {
-  return styled.button`
-    background-color: ${bgColor};
-    text-align: center;
-    color: tomato;
-    font-size: 25px;
+export const SquareStyle = (bgColor: string, hoverColor: string) => styled.button`
+  background-color: ${bgColor};
+  text-align: center;
+  color: tomato;
+  font-size: 25px;
 
-    isplay: inline-block;
-    width: 50px;
-    height: 50px;
-    &:hover {
-      background-color: ${hoverColor};
-    }
-  `;
-};
+  isplay: inline-block;
+  width: 50px;
+  height: 50px;
+  &:hover {
+    background-color: ${hoverColor};
+  }
+`;

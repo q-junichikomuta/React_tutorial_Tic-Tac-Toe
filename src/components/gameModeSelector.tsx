@@ -1,14 +1,14 @@
 import { Stack, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { useContext } from 'react';
+import { memo, useContext } from 'react';
 import { styleComponents } from '@/utils/styleComponents';
 import { DarkModeContext } from '@/utils/context';
 
 type Props = {
-  oneSideNum: number;
+  oneSideNum?: number;
   handleChange: (_event: unknown, newValue: string) => void;
 };
 
-export const GameModeSelector = ({ oneSideNum, handleChange }: Props) => {
+export const GameModeSelector = memo(({ oneSideNum = 3, handleChange }: Props) => {
   const isDarkMode = useContext(DarkModeContext);
   const { TitleStyle } = styleComponents(isDarkMode);
 
@@ -21,7 +21,7 @@ export const GameModeSelector = ({ oneSideNum, handleChange }: Props) => {
         size="small"
         value={String(oneSideNum)}
         exclusive
-        onChange={(_e, newVal) => handleChange(_e, newVal)}
+        onChange={handleChange}
       >
         <ToggleButton value="3">3目並べ</ToggleButton>
         <ToggleButton value="4">4目並べ</ToggleButton>
@@ -29,4 +29,4 @@ export const GameModeSelector = ({ oneSideNum, handleChange }: Props) => {
       </ToggleButtonGroup>
     </Stack>
   );
-};
+});
