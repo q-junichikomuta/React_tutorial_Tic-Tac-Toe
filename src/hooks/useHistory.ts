@@ -1,5 +1,5 @@
 import { positionGenerator } from '@/utils/positionGenerator';
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useGameStatus } from './useGameStatus';
 
 export const useHistory = (oneSideNum: number) => {
@@ -69,11 +69,12 @@ export const useHistory = (oneSideNum: number) => {
         setWonLine(null);
       }
     },
-    [history]
+    [history, wonLine]
   );
 
   // はじめからプレイするための関数
   const restart = useCallback((e: unknown) => {
+    setWonLine(null);
     pageUpdate(e, 0);
   }, []);
 

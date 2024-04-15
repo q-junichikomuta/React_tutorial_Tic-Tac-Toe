@@ -1,4 +1,5 @@
 import { SquareStyle } from '@/utils/styleComponents';
+import { memo } from 'react';
 
 type Props = {
   value: Value;
@@ -6,7 +7,7 @@ type Props = {
   winLine: boolean;
 };
 
-export const Square = ({ value, onClick, winLine }: Props) => {
+export const Square = memo(({ value, onClick, winLine }: Props) => {
   const bgColor = () => {
     if (winLine) {
       return 'white';
@@ -17,11 +18,11 @@ export const Square = ({ value, onClick, winLine }: Props) => {
     }
   };
   const hoverColor = value ? '' : 'bisque';
-  const Style = SquareStyle(bgColor(), hoverColor);
+  // const Style = SquareStyle(bgColor(), hoverColor);
 
   return (
-    <Style onClick={onClick} disabled={value ? true : false}>
+    <SquareStyle bgColor={bgColor()} hoverColor={hoverColor} onClick={onClick} disabled={value ? true : false}>
       {value}
-    </Style>
+    </SquareStyle>
   );
-};
+});

@@ -1,4 +1,4 @@
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, memo } from 'react';
 import { Box, Button, Pagination, Stack } from '@mui/material';
 
 type Props = {
@@ -22,7 +22,27 @@ const MyBox: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   );
 };
 
-export const History = ({ text, historyLength, page, pageUpdate, restart }: Props) => {
+// const MyButton: React.FC<{ restart: MouseEventHandler<HTMLButtonElement> }> = ({ restart }) => {
+//   console.log('botanndayo^');
+
+//   return (
+//     <Button variant="outlined" color="primary" onClick={restart}>
+//       はじめから
+//     </Button>
+//   );
+// };
+
+const RestartButton = memo(({ restart }: { restart: MouseEventHandler<HTMLButtonElement> }) => {
+  console.log('bottondayo-');
+
+  return (
+    <Button variant="outlined" color="primary" onClick={restart}>
+      はじめから
+    </Button>
+  );
+});
+
+export const History = memo(({ text, historyLength, page, pageUpdate, restart }: Props) => {
   return (
     <Stack spacing={1} justifyContent="center" alignContent="center">
       <MyBox>{text}</MyBox>
@@ -36,9 +56,7 @@ export const History = ({ text, historyLength, page, pageUpdate, restart }: Prop
         siblingCount={0}
         boundaryCount={1}
       />
-      <Button variant="outlined" color="primary" onClick={restart}>
-        はじめから
-      </Button>
+      <RestartButton restart={restart} />
     </Stack>
   );
-};
+});

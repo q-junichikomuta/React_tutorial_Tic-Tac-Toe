@@ -1,14 +1,14 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Stack } from '@mui/system';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Game } from '@/components/game';
 import { GameModeSelector } from '@/components/gameModeSelector';
 import { DarkModeButton } from '@/components/darkModeButton';
-import { styleComponents } from '@/utils/styleComponents';
+import { TitleStyle, Wrapper2, styleComponents } from '@/utils/styleComponents';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { mediaQuery, useMediaQuery } from '@/hooks/useMedisQuery';
+import { mediaQuery, useMediaQuery } from '@/hooks/useMediaQuery';
 import { ResponsiveProvider } from '@/components/responsiveProvider';
 import { DarkModeProvider } from '@/components/darkModeProvider';
 
@@ -19,13 +19,18 @@ export default function Home() {
   const isSp = useMediaQuery(mediaQuery.sp); // レスポンシブを管理するカスタムフック
 
   // MUIコンポーネント用のテーマ
-  const theme = createTheme({
-    palette: {
-      mode: isDarkMode ? 'dark' : 'light',
-    },
-  });
+  // レンダリング毎に再計算されないようにメモ化
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: isDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [isDarkMode]
+  );
 
-  const { Wrapper } = styleComponents(isDarkMode);
+  // const { Wrapper } = styleComponents(isDarkMode);
 
   const oneSideNumChange = useCallback((_event: unknown, newValue: string) => {
     if (newValue !== null) {
@@ -37,15 +42,18 @@ export default function Home() {
     <ThemeProvider theme={theme}>
       <DarkModeProvider value={isDarkMode}>
         <ResponsiveProvider value={isSp}>
-          <Wrapper key={`${oneSideNum}-GameMode`}>
+          <Wrapper2 darkMode={isDarkMode}>
             <Stack spacing={2} direction={isSp ? 'column' : 'row'} alignItems="center" justifyContent="center">
               <Stack spacing={2} direction="row" alignItems="center" justifyContent="center">
-                <GameModeSelector oneSideNum={oneSideNum} handleChange={oneSideNumChange} />
+                <Stack spacing={1}>
+                  <TitleStyle darkMode={isDarkMode}>ゲームモードを選択</TitleStyle>
+                  <GameModeSelector oneSideNum={oneSideNum} handleChange={oneSideNumChange} />
+                </Stack>
                 <DarkModeButton handleDarkMode={handleDarkMode} />
               </Stack>
-              <Game oneSideNum={oneSideNum} />
+              <Game key={`${oneSideNum}-Game`} oneSideNum={oneSideNum} />
             </Stack>
-          </Wrapper>
+          </Wrapper2>
         </ResponsiveProvider>
       </DarkModeProvider>
     </ThemeProvider>
