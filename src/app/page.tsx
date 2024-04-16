@@ -11,12 +11,16 @@ import { useDarkMode } from '@/hooks/useDarkMode';
 import { mediaQuery, useMediaQuery } from '@/hooks/useMediaQuery';
 import { ResponsiveProvider } from '@/components/responsiveProvider';
 import { DarkModeProvider } from '@/components/darkModeProvider';
+import { useNewMediaQuery } from '@/hooks/useNewMediaQuery';
 
 export default function Home() {
   const [oneSideNum, setOneSideNum] = useState(3); // 一辺の長さ = n目並べのn
 
   const { isDarkMode, handleDarkMode } = useDarkMode(); // ダークモードを管理するカスタムフック
-  const isSp = useMediaQuery(mediaQuery.sp); // レスポンシブを管理するカスタムフック
+  const { isSp } = useNewMediaQuery();
+
+  // const isSp = useMediaQuery(mediaQuery.sp); // レスポンシブを管理するカスタムフック
+  // console.log(isSp);
 
   // MUIコンポーネント用のテーマ
   // レンダリング毎に再計算されないようにメモ化
