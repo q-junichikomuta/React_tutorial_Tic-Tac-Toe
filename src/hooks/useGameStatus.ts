@@ -1,9 +1,6 @@
 import { winLineGenerator } from '@/utils/winLineGenerator';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useCountDownTimer } from './useCountDownTimer';
-
-type Status = 'before' | 'interval' | 'now' | 'winX' | 'winO' | 'draw';
-type WonLine = number[] | null;
 
 export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
   const { time, startTime, stopTime, resetTime } = useCountDownTimer();
@@ -15,7 +12,7 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
 
   // ゲームモードに対する勝利配列を定義（縦,横,斜めのindexを格納した2次元配列）
   // 横[0,1,2]..., 縦[0,3,6]..., 斜め[0,4,8]...
-  const winLines = winLineGenerator(oneSideNum);
+  const winLines = useMemo(() => winLineGenerator(oneSideNum), [oneSideNum]);
 
   // 現在のボードから、勝利配列に沿った配列を生成する
   const squareValuesGenerator = useCallback(
@@ -104,5 +101,17 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
     }
   }, [status, nextPlayer, time, TIMEUP, stopTime]);
 
-  return { text, status, setStatus, wonLine, setWonLine, time, TIMEUP, checkStatus, surrender, startTime, resetTime };
+  return {
+    text,
+    status,
+    setStatus,
+    wonLine,
+    setWonLine,
+    time,
+    TIMEUP,
+    checkStatus,
+    surrender,
+    startTime,
+    resetTime,
+  };
 };
