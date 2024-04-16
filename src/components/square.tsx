@@ -4,12 +4,12 @@ import { memo } from 'react';
 type Props = {
   value: Value;
   onClick: () => void;
-  winLine: boolean;
+  wonLine: boolean;
 };
 
-export const Square = memo(({ value, onClick, winLine }: Props) => {
+export const Square = memo(({ value, onClick, wonLine }: Props) => {
   const bgColor = () => {
-    if (winLine) {
+    if (wonLine) {
       return 'white';
     } else if (value) {
       return 'bisque';
