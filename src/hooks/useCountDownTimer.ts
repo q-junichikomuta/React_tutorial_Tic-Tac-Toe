@@ -1,13 +1,21 @@
-import { MutableRefObject, useCallback, useRef, useState } from 'react';
+import { gameStatusAtom } from '@/app/globalStates/atoms';
+import { atom, useAtom } from 'jotai';
+import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+// 時間をatomで管理して、timeに関する関数をどのコンポーネントからも操作できるようにする
+const defaultTime = 3;
+const timeAtom = atom(defaultTime);
 
 export const useCountDownTimer = () => {
-  const defaultTime = 3;
+  const [time, setTime] = useAtom(timeAtom);
+
+  const TIMEUP = useMemo(() => time <= 0, []);
   const intervalID: MutableRefObject<number | undefined> = useRef(undefined);
-  const [time, setTime] = useState<number>(defaultTime);
+
+  const [status] = useAtom(gameStatusAtom);
 
   const stopTime = useCallback(() => {
     clearInterval(intervalID.current);
-    // intervalID.current = undefined;
   }, []);
 
   const countDown = useCallback(() => {
@@ -29,10 +37,20 @@ export const useCountDownTimer = () => {
   }, []);
 
   const startTime = useCallback(() => {
-    if (time >= 0) {
+    if (!TIMEUP) {
       resetTime();
     }
     intervalID.current = window.setInterval(countDown, 1000);
-  }, [time]);
-  return { time, startTime, stopTime, resetTime };
+  }, [TIMEUP]);
+
+  useEffect(() => {
+    if (status === 'interval' || status === 'winX' || status === 'winO' || status === 'draw' || TIMEUP) {
+      stopTime();
+      return;
+    } else {
+      return;
+    }
+  }, [status]);
+
+  return { time, startTime, stopTime, resetTime, TIMEUP };
 };

@@ -1,14 +1,19 @@
 import { winLineGenerator } from '@/utils/winLineGenerator';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useCountDownTimer } from './useCountDownTimer';
+import { useAtom } from 'jotai';
+import { gameStatusAtom, gameTextDerivedAtom, oneSideNumAtom, wonLineAtom } from '@/app/globalStates/atoms';
 
-export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
-  const { time, startTime, stopTime, resetTime } = useCountDownTimer();
-  const TIMEUP = time <= 0;
+export const useGameStatus = (nextPlayer: boolean) => {
+  const [oneSideNum] = useAtom(oneSideNumAtom);
+  const [, setGameStatus] = useAtom(gameStatusAtom);
 
-  const [text, setText] = useState(`${oneSideNum}目並べで勝負！`);
-  const [status, setStatus] = useState<Status>('before');
-  const [wonLine, setWonLine] = useState<WonLine>(null); // 一列揃ったライン
+  const [gameText, setGameText] = useAtom(gameTextDerivedAtom);
+
+  const { startTime } = useCountDownTimer();
+
+  // const [status, setStatus] = useState<Status>('before');
+  const [wonLine, setWonLine] = useAtom<WonLine>(wonLineAtom); // 一列揃ったライン
 
   // ゲームモードに対する勝利配列を定義（縦,横,斜めのindexを格納した2次元配列）
   // 横[0,1,2]..., 縦[0,3,6]..., 斜め[0,4,8]...
@@ -54,7 +59,7 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
 
       // 全ての勝利配列が引分判定（=XとOが含まれる）だったら、Statusをdrawにする
       if (draw.every((val) => val === true)) {
-        setStatus('draw');
+        setGameStatus('draw');
         return;
       }
 
@@ -67,51 +72,46 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
       if (win.some((val) => val === true)) {
         const INDEX = win.findIndex((val) => val === true);
 
-        setStatus(squareValues[INDEX][0] === 'X' ? 'winX' : 'winO');
+        setGameStatus(squareValues[INDEX][0] === 'X' ? 'winX' : 'winO');
         setWonLine(winLines[INDEX]);
         return;
       }
 
       // 勝利でも引き分けでもなければゲーム続行
-      setStatus('now');
+      setGameStatus('now');
       return;
     },
     [winLines, squareValuesGenerator]
   );
 
-  const surrender = useCallback(() => {
-    setStatus(nextPlayer ? 'winO' : 'winX');
-  }, []);
+  // const surrender = useCallback(() => {
+  //   setGameStatus(nextPlayer ? 'winO' : 'winX');
+  // }, []);
 
-  // statusの状況によってTextを更新
-  useEffect(() => {
-    if (status === 'before') {
-      return;
-    } else if (status === 'draw') {
-      stopTime();
-      setText('====引き分け====');
-    } else if (status === 'winX' || status === 'winO' || TIMEUP) {
-      stopTime();
-      setText(nextPlayer ? '勝者:O' : '勝者:X');
-    } else if (status === 'interval') {
-      stopTime();
-      setText('待機中・・・');
-    } else {
-      setText(nextPlayer ? `次の手番:X` : `次の手番:O`);
-    }
-  }, [status, nextPlayer, time, TIMEUP, stopTime]);
+  // // statusの状況によってTextを更新
+  // useEffect(() => {
+  //   if (status === 'before') {
+  //     return;
+  //   } else if (status === 'draw') {
+  //     stopTime();
+  //     text = '====引き分け====';
+  //   } else if (status === 'winX' || status === 'winO' || TIMEUP) {
+  //     stopTime();
+  //     text = `${nextPlayer ? '勝者:O' : '勝者:X'}`;
+  //   } else if (status === 'interval') {
+  //     stopTime();
+  //     text = '待機中・・・';
+  //   } else {
+  //     text = `${nextPlayer ? '次の手番:X' : '次の手番:O'}`;
+  //   }
+  // }, [status, nextPlayer, time, TIMEUP, stopTime]);
 
   return {
-    text,
-    status,
-    setStatus,
-    wonLine,
-    setWonLine,
-    time,
-    TIMEUP,
+    // wonLine,
+    // setWonLine,
+    // time,
+    // TIMEUP,
     checkStatus,
-    surrender,
-    startTime,
-    resetTime,
+    // surrender,
   };
 };

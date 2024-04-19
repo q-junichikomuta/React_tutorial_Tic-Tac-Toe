@@ -1,34 +1,57 @@
 import { positionGenerator } from '@/utils/positionGenerator';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useGameStatus } from './useGameStatus';
+import { useAtom } from 'jotai';
+import {
+  currentMoveAtom,
+  gameStatusAtom,
+  gameTextAtom,
+  gameTextDerivedAtom,
+  historyAtom,
+  historyDerivedAtom,
+  historyTextDerivedAtom,
+  nextPlayerAtom,
+  oneSideNumAtom,
+  pageAtom,
+  wonLineAtom,
+} from '@/app/globalStates/atoms';
+import { useCountDownTimer } from './useCountDownTimer';
 
-export const useHistory = (oneSideNum: number) => {
-  // Historyのページネーションを管理するState
-  const [page, setPage] = useState(0);
+export const useHistory = () => {
+  const [oneSideNum] = useAtom(oneSideNumAtom);
+  const [gameStatus, setGameStatus] = useAtom(gameStatusAtom);
+  const [wonLine, setWonLine] = useAtom<WonLine>(wonLineAtom); // 一列揃ったライン
+  const { TIMEUP } = useCountDownTimer();
 
   // 現在のターン数を管理するState
-  const [currentMove, setCurrentMove] = useState(0);
+  const [currentMove, setCurrentMove] = useAtom(currentMoveAtom);
+
   // 現在のターン数が、奇数なら次の手番はPlayerO、偶数なら次の手番はPlayerX
-  const nextPlayer = currentMove % 2 === 0;
+  const [nextPlayer] = useAtom(nextPlayerAtom);
+
+  // Historyのページネーションを管理するState
+  const [page, setPage] = useAtom(pageAtom);
+
+  // 現在のターン数を管理するState
+  // const [currentMove, setCurrentMove] = useState(0);
+  // // 現在のターン数が、奇数なら次の手番はPlayerO、偶数なら次の手番はPlayerX
+  // const nextPlayer = currentMove % 2 === 0;
 
   // Historyを管理するState
-  const [history, setHistory] = useState<HistoryType[]>([
-    {
-      value: Array(oneSideNum * oneSideNum).fill(null),
-      position: null,
-    },
-  ]);
+  // const [history, setHistory] = useState<HistoryType[]>([
+  //   {
+  //     value: Array(oneSideNum * oneSideNum).fill(null),
+  //     position: null,
+  //   },
+  // ]);
+
+  const [history, setHistory] = useAtom(historyDerivedAtom);
 
   // Historyの状態をテキストで表示するためのState
-  const [historyText, setHistoryText] = useState('試合待機中・・・');
+  const [historyText, setHistoryText] = useAtom(historyTextDerivedAtom);
 
   // ゲームの状態を管理するカスタムフックから必要な関数を呼び出す
-  const { text, status, setStatus, wonLine, setWonLine, time, TIMEUP, checkStatus, surrender, resetTime } =
-    useGameStatus(oneSideNum, nextPlayer);
-
-  // 現在のボードの状態
-  const currentSquares = history[currentMove]; // valueとposition
-  const squaresValue = currentSquares.value; // valueのみ
+  const { checkStatus } = useGameStatus(nextPlayer);
 
   // ゲーム進行とHistoryに合わせてHistoryのテキストを更新する関数
   const historyTextUpdate = useCallback(
@@ -53,8 +76,7 @@ export const useHistory = (oneSideNum: number) => {
     (_event: unknown, pageNum: number) => {
       setCurrentMove(pageNum); // ゲームの状態を指定のターンまで戻す
 
-      setStatus('interval'); // ゲーム進行を一時停止させる
-      resetTime(); // 対局時計を一時停止させる
+      setGameStatus('interval'); // ゲーム進行を一時停止させる
 
       // pageNumがrestart用の0であれば別のテキストに置き換えて、pageはまだ戻れるようにそのままにする
       if (pageNum !== 0) {
@@ -78,51 +100,49 @@ export const useHistory = (oneSideNum: number) => {
     pageUpdate(e, 0);
   }, []);
 
+  // 横をアルファベット,縦を数字として座標を生成する
+  const position = useMemo(() => positionGenerator(oneSideNum), [oneSideNum]);
+
   // squareを選択した時の処理
   const squareClick = useCallback(
     (i: number) => {
+      // 現在のボードの状態
+      const currentSquares = history[currentMove]; // valueとposition
+      const squaresValue = currentSquares.value; // valueのみ
+
       // 勝利か引分か時間切れならゲームの進行を止める
-      if (status === 'winX' || status === 'winO' || status === 'draw' || TIMEUP) {
+      if (gameStatus === 'winX' || gameStatus === 'winO' || gameStatus === 'draw' || TIMEUP) {
         return;
       }
 
-      // squaresValueをもとに新しい値を更新するためコピーする(1次配列なのでsliceメソッドで複製、2次配列以上はJSONなどでディープコピーを行う)
-      const latestSquares = squaresValue.slice();
-      latestSquares[i] = nextPlayer ? 'X' : 'O'; // 選択したsquareのvalueを更新
+      // // squaresValueをもとに新しい値を更新するためコピーする(1次配列なのでsliceメソッドで複製、2次配列以上はJSONなどでディープコピーを行う)
+      // const latestSquares = squaresValue.slice();
+      // latestSquares[i] = nextPlayer ? 'X' : 'O'; // 選択したsquareのvalueを更新
 
-      // 横をアルファベット,縦を数字として座標を生成する
-      const position = positionGenerator(oneSideNum);
+      // // 今までのhistoryをスプレッド構文+sliceで展開してコピーして、最後に現在の値を追加する
+      // const latestHistory = [...history.slice(0, currentMove + 1), { value: latestSquares, position: position[i] }];
 
-      // 今までのhistoryをスプレッド構文+sliceで展開してコピーして、最後に現在の値を追加する
-      const latestHistory = [...history.slice(0, currentMove + 1), { value: latestSquares, position: position[i] }];
-      setHistory(latestHistory); // Historyを更新する
+      // // indexに合わせるために、lengthから-1をして最小値を0にする
+      // setCurrentMove(latestHistory.length - 1);
+      // setPage(latestHistory.length - 1);
+      // historyTextUpdate(latestHistory, latestHistory.length - 1);
 
-      // indexに合わせるために、lengthから-1をして最小値を0にする
-      setCurrentMove(latestHistory.length - 1);
-      setPage(latestHistory.length - 1);
-      historyTextUpdate(latestHistory, latestHistory.length - 1);
+      setHistory(i); // Historyを更新する
 
       // 勝利、引分、継続の判定を行う
-      checkStatus(latestSquares);
+      checkStatus(squaresValue);
     },
-    [status, squaresValue, TIMEUP]
+    [gameStatus, TIMEUP, history, oneSideNum]
   );
 
   return {
-    text,
     history,
-    time,
-    surrender,
     wonLine,
     page,
     historyText,
     nextPlayer,
-    squaresValue,
-    currentSquares,
     squareClick,
     pageUpdate,
     restart,
-    TIMEUP,
-    status,
   };
 };

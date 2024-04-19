@@ -1,13 +1,16 @@
+import { useHistory } from '@/hooks/useHistory';
 import { SquareStyle } from '@/utils/styleComponents';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 
 type Props = {
-  value: Value;
-  onClick: () => void;
-  wonLine: boolean;
+  value?: Value;
+  onClick: (i: number) => void;
+  wonLine?: boolean;
+  num: number;
 };
 
-export const Square = memo(({ value, onClick, wonLine }: Props) => {
+export const Square = memo(({ value, onClick, wonLine = false, num }: Props) => {
+  // const { squaresValue, squareClick } = useHistory();
   const bgColor = () => {
     if (wonLine) {
       return 'white';
@@ -19,9 +22,16 @@ export const Square = memo(({ value, onClick, wonLine }: Props) => {
   };
   const hoverColor = value ? '' : 'bisque';
   // const Style = SquareStyle(bgColor(), hoverColor);
+  const valued = value ? 'O' : 'X';
+
+  const squareClick = () => {
+    onClick(num);
+  };
+
+  console.log(`Square${num}です`);
 
   return (
-    <SquareStyle bgColor={bgColor()} hoverColor={hoverColor} onClick={onClick} disabled={value ? true : false}>
+    <SquareStyle bgColor={bgColor()} hoverColor={hoverColor} onClick={squareClick} disabled={value ? true : false}>
       {value}
     </SquareStyle>
   );

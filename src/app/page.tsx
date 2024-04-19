@@ -13,8 +13,12 @@ import { ResponsiveProvider } from '@/components/responsiveProvider';
 import { DarkModeProvider } from '@/components/darkModeProvider';
 import { useNewMediaQuery } from '@/hooks/useNewMediaQuery';
 
+// Jotaiのimport
+import { useAtom } from 'jotai';
+import { oneSideNumAtom } from './globalStates/atoms';
+
 export default function Home() {
-  const [oneSideNum, setOneSideNum] = useState(3); // 一辺の長さ = n目並べのn
+  // 一辺の長さ = n目並べのn
 
   const { isDarkMode, handleDarkMode } = useDarkMode(); // ダークモードを管理するカスタムフック
   const { isSp } = useNewMediaQuery();
@@ -35,12 +39,12 @@ export default function Home() {
   );
 
   // const { Wrapper } = styleComponents(isDarkMode);
-
-  const oneSideNumChange = useCallback((_event: unknown, newValue: string) => {
-    if (newValue !== null) {
-      setOneSideNum(Number(newValue));
-    }
-  }, []);
+  const [oneSideNum, setOneSideNum] = useAtom(oneSideNumAtom);
+  // const oneSideNumChange = useCallback((_event: unknown, newValue: string) => {
+  //   if (newValue !== null) {
+  //     setOneSideNum(Number(newValue));
+  //   }
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -51,11 +55,11 @@ export default function Home() {
               <Stack spacing={2} direction="row" alignItems="center" justifyContent="center">
                 <Stack spacing={1}>
                   <TitleStyle darkMode={isDarkMode}>ゲームモードを選択</TitleStyle>
-                  <GameModeSelector oneSideNum={oneSideNum} handleChange={oneSideNumChange} />
+                  <GameModeSelector />
                 </Stack>
                 <DarkModeButton handleDarkMode={handleDarkMode} />
               </Stack>
-              <Game key={`${oneSideNum}-Game`} oneSideNum={oneSideNum} />
+              <Game />
             </Stack>
           </Wrapper2>
         </ResponsiveProvider>
