@@ -7,3 +7,7 @@ type HistoryType = {
   value: Value[];
   position: string | null;
 };
+
+type Status = 'before' | 'interval' | 'now' | 'winX' | 'winO' | 'draw';
+
+type WonLine = number[] | null;

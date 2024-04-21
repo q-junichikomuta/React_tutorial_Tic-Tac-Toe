@@ -8,7 +8,7 @@ export const useCountDownTimer = () => {
   const stopTime = useCallback(() => {
     clearInterval(intervalID.current);
     // intervalID.current = undefined;
-  }, [intervalID]);
+  }, []);
 
   const countDown = useCallback(() => {
     setTime((prev) => {
@@ -26,13 +26,13 @@ export const useCountDownTimer = () => {
   const resetTime = useCallback(() => {
     stopTime();
     setTime(defaultTime);
-  }, [setTime, stopTime]);
+  }, []);
 
   const startTime = useCallback(() => {
     if (time >= 0) {
       resetTime();
     }
     intervalID.current = window.setInterval(countDown, 1000);
-  }, [time, resetTime, intervalID, countDown]);
+  }, [time]);
   return { time, startTime, stopTime, resetTime };
 };

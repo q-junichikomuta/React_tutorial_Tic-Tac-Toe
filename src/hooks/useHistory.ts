@@ -81,7 +81,7 @@ export const useHistory = (oneSideNum: number) => {
   // squareを選択した時の処理
   const squareClick = useCallback(
     (i: number) => {
-      // 勝利か引分ならゲームの進行を止める
+      // 勝利か引分か時間切れならゲームの進行を止める
       if (status === 'winX' || status === 'winO' || status === 'draw' || TIMEUP) {
         return;
       }
@@ -93,7 +93,7 @@ export const useHistory = (oneSideNum: number) => {
       // 横をアルファベット,縦を数字として座標を生成する
       const position = positionGenerator(oneSideNum);
 
-      // 今までのhistoryをスプレッド構文+sliceで展開してディープコピーをして、最後に現在の値を追加する
+      // 今までのhistoryをスプレッド構文+sliceで展開してコピーして、最後に現在の値を追加する
       const latestHistory = [...history.slice(0, currentMove + 1), { value: latestSquares, position: position[i] }];
       setHistory(latestHistory); // Historyを更新する
 
@@ -107,6 +107,7 @@ export const useHistory = (oneSideNum: number) => {
     },
     [status, squaresValue, TIMEUP]
   );
+
   return {
     text,
     history,
@@ -122,5 +123,6 @@ export const useHistory = (oneSideNum: number) => {
     pageUpdate,
     restart,
     TIMEUP,
+    status,
   };
 };
