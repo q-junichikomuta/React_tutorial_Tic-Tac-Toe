@@ -1,20 +1,21 @@
-import { ChangeEvent, useContext } from 'react';
+import { ChangeEvent, memo, useContext } from 'react';
 import { Stack, Switch } from '@mui/material';
-import { styleComponents } from '@/utils/styleComponents';
+import { TitleStyle, styleComponents } from '@/utils/styleComponents';
 import { DarkModeContext } from '@/utils/context';
 
 type Props = {
-  handleDrakMode: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleDarkMode: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const DarkModeButton = ({ handleDrakMode }: Props) => {
+export const DarkModeButton = memo(({ handleDarkMode }: Props) => {
   const isDarkMode = useContext(DarkModeContext);
-  const { TitleStyle } = styleComponents(isDarkMode);
+
+  console.log('DarkModeButtonはレンダリングされました');
 
   return (
     <Stack spacing={1}>
-      <TitleStyle>ダークモード</TitleStyle>
-      <Switch checked={isDarkMode} onChange={handleDrakMode} inputProps={{ 'aria-label': 'dark-mode' }} />
+      <TitleStyle darkMode={isDarkMode}>ダークモード</TitleStyle>
+      <Switch checked={isDarkMode} onChange={handleDarkMode} inputProps={{ 'aria-label': 'dark-mode' }} />
     </Stack>
   );
-};
+});

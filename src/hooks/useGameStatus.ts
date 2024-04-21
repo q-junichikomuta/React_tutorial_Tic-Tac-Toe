@@ -79,12 +79,12 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
       setStatus('now');
       return;
     },
-    [startTime, winLines, checkWin, checkDraw, squareValuesGenerator]
+    [winLines, squareValuesGenerator]
   );
 
   const surrender = useCallback(() => {
     setStatus(nextPlayer ? 'winO' : 'winX');
-  }, [nextPlayer]);
+  }, []);
 
   // statusの状況によってTextを更新
   useEffect(() => {

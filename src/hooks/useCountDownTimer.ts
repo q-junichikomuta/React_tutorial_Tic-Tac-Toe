@@ -21,7 +21,7 @@ export const useCountDownTimer = () => {
       }
       return currentTime;
     });
-  }, [setTime, stopTime]);
+  }, []);
 
   const resetTime = useCallback(() => {
     stopTime();
