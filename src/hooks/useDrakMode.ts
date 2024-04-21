@@ -4,12 +4,9 @@ export const useDarkMode = () => {
   // ダークモードの状態を管理するState
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const handleDrakMode = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setIsDarkMode(event.target.checked);
-    },
-    [isDarkMode]
-  );
+  const handleDrakMode = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setIsDarkMode(event.target.checked);
+  }, []);
 
   // OSのテーマに沿ってダークモードを決める
   const initialTheme = () => {

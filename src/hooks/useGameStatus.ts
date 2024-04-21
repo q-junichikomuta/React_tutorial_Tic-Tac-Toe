@@ -18,19 +18,24 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
   const winLines = winLineGenerator(oneSideNum);
 
   // 現在のボードから、勝利配列に沿った配列を生成する
-  const squareValuesGenerator = (value: Value[]) => {
-    return [...Array(winLines.length)].map((_, i) => {
-      const winLine = winLines[i];
-      return winLine.map((u) => value[u]);
-    });
-  };
+  const squareValuesGenerator = useCallback(
+    (value: Value[]) => {
+      return [...Array(winLines.length)].map((_, i) => {
+        const winLine = winLines[i];
+        return winLine.map((u) => value[u]);
+      });
+    },
+    [winLines]
+  );
 
   // 勝利判定：一列のうちにnullが含まれておらず、全て同じ文字列であればtrueを返す
-  const checkWin = (squareValue: Value[]) =>
-    squareValue.includes(null) ? false : squareValue.every((val) => val === squareValue[0]);
+  const checkWin = useCallback(
+    (squareValue: Value[]) => (squareValue.includes(null) ? false : squareValue.every((val) => val === squareValue[0])),
+    []
+  );
 
   // 引分判定：一列のうち◯と☓の両方が含まれている
-  const checkDraw = (squareValue: Value[]) => {
+  const checkDraw = useCallback((squareValue: Value[]) => {
     const checkText = ['X', 'O'];
     const joined = squareValue.join('');
 
@@ -38,7 +43,7 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
     const isAllIncludes = (arr: string[], target: string) => arr.every((el) => target.includes(el));
 
     return isAllIncludes(checkText, joined);
-  };
+  }, []);
 
   const checkStatus = useCallback(
     (value: Value[]) => {
@@ -74,12 +79,12 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
       setStatus('now');
       return;
     },
-    [checkWin, checkDraw, status, wonLine]
+    [startTime, winLines, checkWin, checkDraw, squareValuesGenerator]
   );
 
   const surrender = useCallback(() => {
     setStatus(nextPlayer ? 'winO' : 'winX');
-  }, [status]);
+  }, [nextPlayer]);
 
   // statusの状況によってTextを更新
   useEffect(() => {
@@ -97,7 +102,7 @@ export const useGameStatus = (oneSideNum: number, nextPlayer: boolean) => {
     } else {
       setText(nextPlayer ? `次の手番:X` : `次の手番:O`);
     }
-  }, [status, nextPlayer, time]);
+  }, [status, nextPlayer, time, TIMEUP, stopTime]);
 
   return { text, status, setStatus, wonLine, setWonLine, time, TIMEUP, checkStatus, surrender, startTime, resetTime };
 };

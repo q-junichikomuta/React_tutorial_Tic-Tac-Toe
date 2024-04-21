@@ -31,22 +31,19 @@ export const useHistory = (oneSideNum: number) => {
   const squaresValue = currentSquares.value; // valueのみ
 
   // ゲーム進行とHistoryに合わせてHistoryのテキストを更新する関数
-  const historyTextUpdate = useCallback(
-    (historyArray: HistoryType[], index: number) => {
-      const move = historyArray?.map((u, i) => {
-        const position = u.position || null;
-        return {
-          turn: i,
-          player: i % 2 === 0 ? 'O' : 'X',
-          position: position,
-        };
-      });
+  const historyTextUpdate = useCallback((historyArray: HistoryType[], index: number) => {
+    const move = historyArray?.map((u, i) => {
+      const position = u.position || null;
+      return {
+        turn: i,
+        player: i % 2 === 0 ? 'O' : 'X',
+        position: position,
+      };
+    });
 
-      const text = move[index];
-      setHistoryText(`${text.turn}ターン目 | Pleyer：${text.player} | ${text.position}`);
-    },
-    [history, historyText]
-  );
+    const text = move[index];
+    setHistoryText(`${text.turn}ターン目 | Pleyer：${text.player} | ${text.position}`);
+  }, []);
 
   // Historyのページネーションを選択した時の処理
   const pageUpdate = (_event: unknown, pageNum: number) => {

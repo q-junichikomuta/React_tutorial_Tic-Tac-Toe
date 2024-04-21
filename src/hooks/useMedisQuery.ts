@@ -24,7 +24,7 @@ export const useMediaQuery = (query: string) => {
     return () => {
       mql.onchange = null;
     };
-  }, [formattedQuery, setMatch]);
+  }, [mql, formattedQuery, setMatch]);
 
   return match;
 };

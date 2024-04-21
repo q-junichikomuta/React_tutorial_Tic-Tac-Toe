@@ -1,7 +1,7 @@
 import { Stack, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useContext } from 'react';
-import { DarkModeContext } from '@/app/page';
 import { styleComponents } from '@/utils/styleComponents';
+import { DarkModeContext } from '@/utils/context';
 
 type Props = {
   oneSideNum: number;
