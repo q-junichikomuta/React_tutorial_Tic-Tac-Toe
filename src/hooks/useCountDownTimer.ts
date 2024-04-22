@@ -1,18 +1,20 @@
-import { gameStatusAtom } from '@/app/globalStates/atoms';
-import { atom, useAtom } from 'jotai';
+import { gameStatusAtom } from '@/globalStates/atoms';
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // 時間をatomで管理して、timeに関する関数をどのコンポーネントからも操作できるようにする
 const defaultTime = 3;
-const timeAtom = atom(defaultTime);
+export const timeAtom = atom(defaultTime);
+export const TIMEUPAtom = atom((get) => get(timeAtom) <= 0);
 
 export const useCountDownTimer = () => {
-  const [time, setTime] = useAtom(timeAtom);
+  const setTime = useSetAtom(timeAtom);
+  const TIMEUP = useAtomValue(TIMEUPAtom);
 
-  const TIMEUP = useMemo(() => time <= 0, []);
+  // const TIMEUP = useMemo(() => time <= 0, [time]);
   const intervalID: MutableRefObject<number | undefined> = useRef(undefined);
 
-  const [status] = useAtom(gameStatusAtom);
+  const gameStatus = useAtomValue(gameStatusAtom);
 
   const stopTime = useCallback(() => {
     clearInterval(intervalID.current);
@@ -37,20 +39,23 @@ export const useCountDownTimer = () => {
   }, []);
 
   const startTime = useCallback(() => {
-    if (!TIMEUP) {
-      resetTime();
+    console.log(gameStatus, TIMEUP);
+
+    if (gameStatus === 'win' || gameStatus === 'draw' || TIMEUP) {
+      return;
     }
+    resetTime();
     intervalID.current = window.setInterval(countDown, 1000);
-  }, [TIMEUP]);
+  }, [gameStatus, TIMEUP]);
 
   useEffect(() => {
-    if (status === 'interval' || status === 'winX' || status === 'winO' || status === 'draw' || TIMEUP) {
+    if (gameStatus === 'interval' || gameStatus === 'win' || gameStatus === 'draw' || TIMEUP) {
       stopTime();
       return;
     } else {
       return;
     }
-  }, [status]);
+  }, [gameStatus, TIMEUP]);
 
-  return { time, startTime, stopTime, resetTime, TIMEUP };
+  return { startTime, stopTime, resetTime };
 };

@@ -8,6 +8,6 @@ type HistoryType = {
   position: string | null;
 };
 
-type Status = 'before' | 'interval' | 'now' | 'winX' | 'winO' | 'draw';
+type Status = 'before' | 'interval' | 'now' | 'win' | 'draw';
 
 type WonLine = number[] | null;

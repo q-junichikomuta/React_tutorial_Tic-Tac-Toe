@@ -15,7 +15,7 @@ import { useNewMediaQuery } from '@/hooks/useNewMediaQuery';
 
 // Jotaiのimport
 import { useAtom } from 'jotai';
-import { oneSideNumAtom } from './globalStates/atoms';
+import { oneSideNumAtom } from '../globalStates/atoms';
 
 export default function Home() {
   // 一辺の長さ = n目並べのn
