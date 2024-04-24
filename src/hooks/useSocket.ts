@@ -1,13 +1,12 @@
-import { messageBoardAtom, socketAtom } from '@/app/globalStates/atoms';
 import Message from '@/app/models/message';
-import { useAtom } from 'jotai';
+import { messageBoardAtom, socketAtom } from '@/globalStates/socketAtoms';
+import { useSetAtom } from 'jotai';
 import { io } from 'socket.io-client';
 
 export const useSocket = () => {
-  const oneSideNum = 3;
   // 各グローバル状態のAtomを用意
-  const [, setMessageBoard] = useAtom(messageBoardAtom);
-  const [, setSocket] = useAtom(socketAtom);
+  const setMessageBoard = useSetAtom(messageBoardAtom);
+  const setSocket = useSetAtom(socketAtom);
 
   const socketInitializer = (socket: any) => {
     // サーバーとの接続が確立したときの処理
@@ -33,7 +32,9 @@ export const useSocket = () => {
     });
   };
 
-  // WebSocketに接続する関数
+  /**
+   * WebSocketに接続する関数
+   */
   const socketConnect = async () => {
     // WebSocketサーバーに接続するにはまずHTTPサーバーに接続してWebSocketのエンドポイントを取得する必要がある
     await fetch('http://localhost:3000/api/sockets', { method: 'POST' });
