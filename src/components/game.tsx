@@ -1,6 +1,6 @@
 import { Button, Stack } from '@mui/material';
 import { History } from './history';
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 
 import { gameStatusAtom, gameTextAtom, isGameFinishAtom } from '@/globalStates/gameStatusAtom';

@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { Box, Button, Pagination, Stack } from '@mui/material';
 import { useAtomValue, useSetAtom } from 'jotai';
 

@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, useCallback, useEffect } from 'react';
+import { ChangeEvent, useCallback, useEffect } from 'react';
 import { Stack, Switch } from '@mui/material';
 import { TitleStyle } from '@/utils/styleComponents';
 import { useAtom } from 'jotai';

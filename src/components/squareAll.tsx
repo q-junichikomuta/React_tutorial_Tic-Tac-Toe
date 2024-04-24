@@ -1,6 +1,6 @@
 import { Square } from './square';
 import { PlayBoard } from '@/utils/styleComponents';
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { boardSizeAtom } from '@/globalStates/boardSizeAtoms';
 import { squareClickAtom } from '@/globalStates/gameStatusAtom';
