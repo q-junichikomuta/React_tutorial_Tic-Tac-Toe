@@ -1,15 +1,15 @@
 import { isGameFinishAtom } from '@/globalStates/gameStatusAtom';
 import { squareValueAtom, squareWonLineAtom } from '@/globalStates/squareValueAtom';
 import { SquareStyle } from '@/utils/styleComponents';
-import { atom, useAtomValue } from 'jotai';
-import { memo, useCallback } from 'react';
+import { useAtomValue } from 'jotai';
+import { useCallback } from 'react';
 
 type Props = {
   onClick: (i: number) => void;
   num: number;
 };
 
-export const Square = memo(({ onClick, num }: Props) => {
+export const Square = ({ onClick, num }: Props) => {
   const value = useAtomValue(squareValueAtom(num));
   const wonLine = useAtomValue(squareWonLineAtom(num));
   const isGameFinish = useAtomValue(isGameFinishAtom);
@@ -37,4 +37,4 @@ export const Square = memo(({ onClick, num }: Props) => {
       {value}
     </SquareStyle>
   );
-});
+};

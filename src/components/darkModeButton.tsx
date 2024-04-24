@@ -1,10 +1,10 @@
-import { ChangeEvent, memo, useCallback, useEffect } from 'react';
+import { ChangeEvent, useCallback, useEffect } from 'react';
 import { Stack, Switch } from '@mui/material';
 import { TitleStyle } from '@/utils/styleComponents';
 import { useAtom } from 'jotai';
 import { darkModeAtom } from '@/globalStates/darkModeAtom';
 
-export const DarkModeButton = memo(() => {
+export const DarkModeButton = () => {
   const [isDarkMode, setIsDarkMode] = useAtom(darkModeAtom);
 
   const handleDarkMode = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -29,4 +29,4 @@ export const DarkModeButton = memo(() => {
       <Switch checked={isDarkMode} onChange={handleDarkMode} inputProps={{ 'aria-label': 'dark-mode' }} />
     </Stack>
   );
-});
+};

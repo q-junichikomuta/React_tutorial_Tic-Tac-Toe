@@ -1,9 +1,9 @@
 import { boardSizeAtom, boardSizeChangeAtom } from '@/globalStates/boardSizeAtoms';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 
-export const GameModeSelector = memo(() => {
+export const GameModeSelector = () => {
   const boardSizeNum = useAtomValue(boardSizeAtom);
   const boardSizeNumChange = useSetAtom(boardSizeChangeAtom);
 
@@ -27,4 +27,4 @@ export const GameModeSelector = memo(() => {
       <ToggleButton value="5">5目並べ</ToggleButton>
     </ToggleButtonGroup>
   );
-});
+};

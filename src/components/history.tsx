@@ -1,11 +1,11 @@
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { Box, Button, Pagination, Stack } from '@mui/material';
 import { useAtomValue, useSetAtom } from 'jotai';
 
 import { historyLengthAtom, historyTextAtom } from '@/globalStates/historyAtoms';
 import { pageAtom, updatePageAtom } from '@/globalStates/pageAtoms';
 
-const TextBox = memo(() => {
+const TextBox = () => {
   const historyText = useAtomValue(historyTextAtom);
   return (
     <Box
@@ -17,9 +17,9 @@ const TextBox = memo(() => {
       {historyText}
     </Box>
   );
-});
+};
 
-const Pages = memo(() => {
+const Pages = () => {
   const historyLength = useAtomValue(historyLengthAtom);
   const page = useAtomValue(pageAtom);
   const updatePage = useSetAtom(updatePageAtom);
@@ -40,9 +40,9 @@ const Pages = memo(() => {
       boundaryCount={1}
     />
   );
-});
+};
 
-const RestartButton = memo(() => {
+const RestartButton = () => {
   const updatePage = useSetAtom(updatePageAtom);
 
   const restart = useCallback(() => {
@@ -54,9 +54,9 @@ const RestartButton = memo(() => {
       はじめから
     </Button>
   );
-});
+};
 
-export const History = memo(() => {
+export const History = () => {
   return (
     <Stack spacing={1} justifyContent="center" alignContent="center">
       <TextBox />
@@ -64,4 +64,4 @@ export const History = memo(() => {
       <RestartButton />
     </Stack>
   );
-});
+};

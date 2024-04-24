@@ -1,6 +1,6 @@
 import { Square } from './square';
 import { PlayBoard } from '@/utils/styleComponents';
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { boardSizeAtom } from '@/globalStates/boardSizeAtoms';
 import { squareClickAtom } from '@/globalStates/gameStatusAtom';
@@ -8,7 +8,7 @@ import { squareClickAtom } from '@/globalStates/gameStatusAtom';
 /**
  * valueを反映させたsquareを生成
  */
-export const SquareAll = memo(() => {
+export const SquareAll = () => {
   const boardSize = useAtomValue(boardSizeAtom);
   const squareClick = useSetAtom(squareClickAtom);
 
@@ -27,4 +27,4 @@ export const SquareAll = memo(() => {
       ))}
     </PlayBoard>
   );
-});
+};
