@@ -16,6 +16,14 @@ import { timeAtom, timeUpAtom } from './timeAtoms';
 export const gameStatusAtom = atomWithReset<Status>('before');
 
 /**
+ * ゲームのStatusがwin,draw,timeupであればゲーム終了を返すAtom
+ * gameStatusの更新によって再レンダリングされないように外部のatomを介して個別のStatusを定義
+ */
+export const isGameFinishAtom = atom(
+  (get) => get(gameStatusAtom) === 'win' || get(gameStatusAtom) === 'draw' || get(gameStatusAtom) === 'timeup'
+);
+
+/**
  * 勝利が決まった配列
  */
 export const wonLineAtom = atomWithReset<WonLine>([]); // 一列揃ったライン

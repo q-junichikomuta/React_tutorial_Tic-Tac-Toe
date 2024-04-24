@@ -3,7 +3,7 @@ import { History } from './history';
 import { memo, useCallback } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 
-import { gameStatusAtom, gameTextAtom } from '@/globalStates/gameStatusAtom';
+import { gameStatusAtom, gameTextAtom, isGameFinishAtom } from '@/globalStates/gameStatusAtom';
 import { useNewMediaQuery } from '@/hooks/useMediaQuery';
 import { SquareAll } from './squareAll';
 import { TimeDisplay } from './timeDisplay';
@@ -15,12 +15,14 @@ const GameStatusDisplay = memo(() => {
 
 const SurrenderButton = memo(() => {
   const setGameStatus = useSetAtom(gameStatusAtom);
+  const isGameFinish = useAtomValue(isGameFinishAtom); //ゲームが終了したらボタンをdisableにする
+
   const onClick = useCallback(() => {
     setGameStatus('win');
   }, []);
 
   return (
-    <Button variant="contained" size="small" color="error" onClick={onClick}>
+    <Button variant="contained" size="small" color="error" onClick={onClick} disabled={isGameFinish}>
       投了
     </Button>
   );
