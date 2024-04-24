@@ -22,7 +22,7 @@ const timeSwitchAtom = atom((get) => {
 });
 
 /**
- * カウントダウンを行うatomEffect
+ * gameStatusに伴いカウントダウンを行うatomEffect
  */
 export const timeCountDownEffectAtom = atomEffect((get, set) => {
   if (get(timeSwitchAtom)) {
