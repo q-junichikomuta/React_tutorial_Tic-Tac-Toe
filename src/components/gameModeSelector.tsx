@@ -1,15 +1,15 @@
-import { oneSideNumAtom, oneSideNumChangeAtom } from '@/globalStates/atoms';
+import { boardSizeAtom, boardSizeChangeAtom } from '@/globalStates/boardSizeAtoms';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback } from 'react';
 
 export const GameModeSelector = memo(() => {
-  const oneSideNum = useAtomValue(oneSideNumAtom);
-  const oneSideNumChange = useSetAtom(oneSideNumChangeAtom);
+  const boardSizeNum = useAtomValue(boardSizeAtom);
+  const boardSizeNumChange = useSetAtom(boardSizeChangeAtom);
 
   const oneChange = useCallback((_event: unknown, newValue: string) => {
     if (newValue !== null) {
-      oneSideNumChange(Number(newValue));
+      boardSizeNumChange(Number(newValue));
     }
   }, []);
 
@@ -18,7 +18,7 @@ export const GameModeSelector = memo(() => {
       id="game-mode-select"
       color="primary"
       size="small"
-      value={String(oneSideNum)}
+      value={String(boardSizeNum)}
       exclusive
       onChange={oneChange}
     >
