@@ -4,7 +4,7 @@ import { TitleStyle } from '@/utils/styleComponents';
 import { useAtom } from 'jotai';
 import { darkModeAtom } from '@/globalStates/darkModeAtom';
 
-export const DarkModeButton = memo(() => {
+export const DarkModeButton = () => {
   const [isDarkMode, setIsDarkMode] = useAtom(darkModeAtom);
 
   const handleDarkMode = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -29,4 +29,4 @@ export const DarkModeButton = memo(() => {
       <Switch checked={isDarkMode} onChange={handleDarkMode} inputProps={{ 'aria-label': 'dark-mode' }} />
     </Stack>
   );
-});
+};

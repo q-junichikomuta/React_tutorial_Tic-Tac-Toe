@@ -8,7 +8,7 @@ import { squareClickAtom } from '@/globalStates/gameStatusAtom';
 /**
  * valueを反映させたsquareを生成
  */
-export const SquareAll = memo(() => {
+export const SquareAll = () => {
   const boardSize = useAtomValue(boardSizeAtom);
   const squareClick = useSetAtom(squareClickAtom);
 
@@ -27,4 +27,4 @@ export const SquareAll = memo(() => {
       ))}
     </PlayBoard>
   );
-});
+};

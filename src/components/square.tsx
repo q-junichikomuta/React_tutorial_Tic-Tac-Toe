@@ -9,7 +9,7 @@ type Props = {
   num: number;
 };
 
-export const Square = memo(({ onClick, num }: Props) => {
+export const Square = ({ onClick, num }: Props) => {
   const value = useAtomValue(squareValueAtom(num));
   const wonLine = useAtomValue(squareWonLineAtom(num));
   const isGameFinish = useAtomValue(isGameFinishAtom);
@@ -37,4 +37,4 @@ export const Square = memo(({ onClick, num }: Props) => {
       {value}
     </SquareStyle>
   );
-});
+};
