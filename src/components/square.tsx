@@ -1,13 +1,22 @@
+import { isGameFinishAtom } from '@/globalStates/gameStatusAtom';
+import { squareValueAtom, squareWonLineAtom } from '@/globalStates/squareValueAtom';
 import { SquareStyle } from '@/utils/styleComponents';
-import { memo } from 'react';
+import { atom, useAtomValue } from 'jotai';
+import { memo, useCallback } from 'react';
 
 type Props = {
-  value: Value;
-  onClick: () => void;
-  wonLine: boolean;
+  onClick: (i: number) => void;
+  num: number;
 };
 
-export const Square = memo(({ value, onClick, wonLine }: Props) => {
+export const Square = memo(({ onClick, num }: Props) => {
+  const value = useAtomValue(squareValueAtom(num));
+  const wonLine = useAtomValue(squareWonLineAtom(num));
+  const isGameFinish = useAtomValue(isGameFinishAtom);
+
+  // バリューが入っているか、ゲームが終了していたらtrueを返す
+  const isNotPlay = value !== null || isGameFinish;
+
   const bgColor = () => {
     if (wonLine) {
       return 'white';
@@ -17,11 +26,14 @@ export const Square = memo(({ value, onClick, wonLine }: Props) => {
       return '#525F78';
     }
   };
-  const hoverColor = value ? '' : 'bisque';
-  // const Style = SquareStyle(bgColor(), hoverColor);
+  const hoverColor = isNotPlay ? '' : 'bisque';
+
+  const click = useCallback(() => {
+    onClick(num);
+  }, []);
 
   return (
-    <SquareStyle bgColor={bgColor()} hoverColor={hoverColor} onClick={onClick} disabled={value ? true : false}>
+    <SquareStyle bgColor={bgColor()} hoverColor={hoverColor} onClick={click} disabled={isNotPlay ? true : false}>
       {value}
     </SquareStyle>
   );

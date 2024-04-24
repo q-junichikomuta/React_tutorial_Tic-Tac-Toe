@@ -1,15 +1,12 @@
-import { MouseEventHandler, memo } from 'react';
+import { memo, useCallback } from 'react';
 import { Box, Button, Pagination, Stack } from '@mui/material';
+import { useAtomValue, useSetAtom } from 'jotai';
 
-type Props = {
-  text: string;
-  page: number;
-  pageUpdate: (_event: React.ChangeEvent<unknown>, value: number) => void;
-  historyLength: number;
-  restart: MouseEventHandler<HTMLButtonElement>;
-};
+import { historyLengthAtom, historyTextAtom } from '@/globalStates/historyAtoms';
+import { pageAtom, updatePageAtom } from '@/globalStates/pageAtoms';
 
-const MyBox: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+const TextBox = memo(() => {
+  const historyText = useAtomValue(historyTextAtom);
   return (
     <Box
       component="section"
@@ -17,23 +14,40 @@ const MyBox: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
       textAlign="center"
       justifyContent="center"
     >
-      {children}
+      {historyText}
     </Box>
   );
-};
+});
 
-// const MyButton: React.FC<{ restart: MouseEventHandler<HTMLButtonElement> }> = ({ restart }) => {
-//   console.log('botanndayo^');
+const Pages = memo(() => {
+  const historyLength = useAtomValue(historyLengthAtom);
+  const page = useAtomValue(pageAtom);
+  const updatePage = useSetAtom(updatePageAtom);
 
-//   return (
-//     <Button variant="outlined" color="primary" onClick={restart}>
-//       はじめから
-//     </Button>
-//   );
-// };
+  const update = useCallback((_event: unknown, pageNum: number) => {
+    updatePage(pageNum);
+  }, []);
 
-const RestartButton = memo(({ restart }: { restart: MouseEventHandler<HTMLButtonElement> }) => {
-  console.log('bottondayo-');
+  return (
+    <Pagination
+      color="primary"
+      sx={{ width: 300 }}
+      count={historyLength}
+      disabled={page === 0}
+      page={page}
+      onChange={update}
+      siblingCount={0}
+      boundaryCount={1}
+    />
+  );
+});
+
+const RestartButton = memo(() => {
+  const updatePage = useSetAtom(updatePageAtom);
+
+  const restart = useCallback(() => {
+    updatePage(0);
+  }, []);
 
   return (
     <Button variant="outlined" color="primary" onClick={restart}>
@@ -42,21 +56,12 @@ const RestartButton = memo(({ restart }: { restart: MouseEventHandler<HTMLButton
   );
 });
 
-export const History = memo(({ text, historyLength, page, pageUpdate, restart }: Props) => {
+export const History = memo(() => {
   return (
     <Stack spacing={1} justifyContent="center" alignContent="center">
-      <MyBox>{text}</MyBox>
-      <Pagination
-        color="primary"
-        sx={{ width: 300 }}
-        count={historyLength}
-        disabled={page === 0}
-        page={page}
-        onChange={pageUpdate}
-        siblingCount={0}
-        boundaryCount={1}
-      />
-      <RestartButton restart={restart} />
+      <TextBox />
+      <Pages />
+      <RestartButton />
     </Stack>
   );
 });

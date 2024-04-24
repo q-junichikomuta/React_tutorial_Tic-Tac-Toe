@@ -1,20 +1,26 @@
+import { boardSizeAtom, boardSizeChangeAtom } from '@/globalStates/boardSizeAtoms';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { memo } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { memo, useCallback } from 'react';
 
-type Props = {
-  oneSideNum?: number;
-  handleChange: (_event: unknown, newValue: string) => void;
-};
+export const GameModeSelector = memo(() => {
+  const boardSizeNum = useAtomValue(boardSizeAtom);
+  const boardSizeNumChange = useSetAtom(boardSizeChangeAtom);
 
-export const GameModeSelector = memo(({ oneSideNum = 3, handleChange }: Props) => {
+  const oneChange = useCallback((_event: unknown, newValue: string) => {
+    if (newValue !== null) {
+      boardSizeNumChange(Number(newValue));
+    }
+  }, []);
+
   return (
     <ToggleButtonGroup
       id="game-mode-select"
       color="primary"
       size="small"
-      value={String(oneSideNum)}
+      value={String(boardSizeNum)}
       exclusive
-      onChange={handleChange}
+      onChange={oneChange}
     >
       <ToggleButton value="3">3目並べ</ToggleButton>
       <ToggleButton value="4">4目並べ</ToggleButton>

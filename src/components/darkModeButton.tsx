@@ -1,16 +1,27 @@
-import { ChangeEvent, memo, useContext } from 'react';
+import { ChangeEvent, memo, useCallback, useEffect } from 'react';
 import { Stack, Switch } from '@mui/material';
-import { TitleStyle, styleComponents } from '@/utils/styleComponents';
-import { DarkModeContext } from '@/utils/context';
+import { TitleStyle } from '@/utils/styleComponents';
+import { useAtom } from 'jotai';
+import { darkModeAtom } from '@/globalStates/darkModeAtom';
 
-type Props = {
-  handleDarkMode: (event: ChangeEvent<HTMLInputElement>) => void;
-};
+export const DarkModeButton = memo(() => {
+  const [isDarkMode, setIsDarkMode] = useAtom(darkModeAtom);
 
-export const DarkModeButton = memo(({ handleDarkMode }: Props) => {
-  const isDarkMode = useContext(DarkModeContext);
+  const handleDarkMode = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setIsDarkMode(event.target.checked);
+  }, []);
 
-  console.log('DarkModeButtonはレンダリングされました');
+  // 初回読み込み時にOSのテーマを読み込む
+  useEffect(() => {
+    const prefersColorSchemeDark = matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // ダークテーマに設定されていたらisDarkModeをtrueにする
+    if (prefersColorSchemeDark) {
+      setIsDarkMode(true);
+    } else {
+      setIsDarkMode(false);
+    }
+  }, []);
 
   return (
     <Stack spacing={1}>
