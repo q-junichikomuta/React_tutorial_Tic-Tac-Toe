@@ -7,11 +7,11 @@ import { Game } from '@/components/game';
 import { GameModeSelector } from '@/components/gameModeSelector';
 import { DarkModeButton } from '@/components/darkModeButton';
 import { TitleStyle, Wrapper } from '@/utils/styleComponents';
-import { darkModeAtom } from '@/hooks/useDarkMode';
 
 // Jotaiのimport
 import { useAtomValue } from 'jotai';
 import { useNewMediaQuery } from '@/hooks/useMediaQuery';
+import { darkModeAtom } from '@/globalStates/darkModeAtom';
 
 export default function Home() {
   const isDarkMode = useAtomValue(darkModeAtom);
