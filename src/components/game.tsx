@@ -8,12 +8,12 @@ import { useNewMediaQuery } from '@/hooks/useMediaQuery';
 import { SquareAll } from './squareAll';
 import { TimeDisplay } from './timeDisplay';
 
-const GameStatusDisplay = memo(() => {
+const GameStatusDisplay = () => {
   const gameText = useAtomValue(gameTextAtom);
   return <div>{gameText}</div>;
-});
+};
 
-const SurrenderButton = memo(() => {
+const SurrenderButton = () => {
   const setGameStatus = useSetAtom(gameStatusAtom);
   const isGameFinish = useAtomValue(isGameFinishAtom); //ゲームが終了したらボタンをdisableにする
 
@@ -26,9 +26,9 @@ const SurrenderButton = memo(() => {
       投了
     </Button>
   );
-});
+};
 
-export const Game = memo(() => {
+export const Game = () => {
   // レスポンシブを取得
   const { isSp } = useNewMediaQuery();
 
@@ -43,4 +43,4 @@ export const Game = memo(() => {
       <History />
     </Stack>
   );
-});
+};
